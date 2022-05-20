@@ -18,8 +18,15 @@ This app aims to retain the motivation that people have towards working out and 
 
 ---
 
-## To Do
-- [ ] plan out mvp
-- [ ] design mvp on figma?
-- [ ] first sprint: design mvp by ______
+## Information
+#### Links
+[Project Documentation](https://docs.google.com/document/d/1C3jKW0eY5vk2FBU2KxfJt62THZBQ9Zhku9-dq8PkYh4/edit) \
+[Project Idea/Brainstorm](https://docs.google.com/document/d/16ygNktoWMI5ws5bw9VOr405scNEsafuZl3CZEMSH3sw/edit) \
+[Figma Design](https://www.figma.com/team_invite/redeem/DEsdDLwBMtnjamyoYVoxwT)
 
+#### Emails
+Aaron Huang: \
+Andy Ho: \
+Cameron King: \
+ChanChan Mao: \
+Mathew Kramsch: mathewkramsch@ucsb.edu
