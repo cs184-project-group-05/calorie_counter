@@ -19,7 +19,12 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="edu.ucsb.cs.cs184.caloriecounter.ui.notifications.NotificationsFragment"
+        android:name="edu.ucsb.cs.cs184.caloriecounter.ui.dashboard.DashboardFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/navigation_log_calories"
+        android:name="edu.ucsb.cs.cs184.caloriecounter.ui.logcalories.LogCaloriesFragment"
+        android:label="LogCaloriesFragment"
+        tools:layout="@layout/log_calories_fragment" />
 </navigation>
