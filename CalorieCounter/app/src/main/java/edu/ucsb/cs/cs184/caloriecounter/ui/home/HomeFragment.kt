@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
 
@@ -65,43 +66,37 @@ class HomeFragment : Fragment() {
         val streakView: TextView = binding.streakText
         streakView.text = homeViewModel.getStreakText()
 
+        // - - - - - - - - - - fab - - - - - - - - - -
+        val fab = binding.extendedFab
+        fab.setOnClickListener {
+            // set name
+            homeViewModel.setName(nameInputView.editText?.text.toString())
+
+            // set age
+            val validInputAge = homeViewModel.setAge(ageInputView.editText?.text.toString())
+
+            // set weight
+            val validInputWeight = homeViewModel.setWeight(weightInputView.editText?.text.toString())
+
+            // set height
+            val validInputHeight = homeViewModel.setHeight(heightInputView.editText?.text.toString())
+
+            // set gender
+            homeViewModel.setGender(genderDropdown.editText?.text.toString())
+
+            // set goal
+            homeViewModel.setGoal(goalDropdown.editText?.text.toString())
+
+            // display appropriate snackbar text, also update the title text
+            val snackbarText = homeViewModel.getSnackbarText(validInputAge, validInputWeight, validInputHeight)
+            Snackbar.make(fab, snackbarText, Snackbar.LENGTH_LONG).show()
+            title.text = homeViewModel.getWelcomeMessage()
+        }
+
         return root
     }
 
     override fun onDestroyView() {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        // - - - - - - - - - - name text input field - - - - - - - - - -
-        val nameInputView = binding.textInputLayout8
-        homeViewModel.name.value = nameInputView.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the name in local database
-
-        // - - - - - - - - - - age text input field - - - - - - - - - -
-        val ageInputView = binding.ageInput
-        homeViewModel.age.value = ageInputView.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the age in local database
-
-        // - - - - - - - - - - weight text input field - - - - - - - - - -
-        val weightInputView = binding.weightInput
-        homeViewModel.weight.value = weightInputView.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the weight in local database
-
-        // - - - - - - - - - - height text input field - - - - - - - - - -
-        val heightInputView = binding.heightInput
-        homeViewModel.height.value = heightInputView.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the height in local database
-
-        // - - - - - - - - - - gender text input field - - - - - - - - - -
-        val genderDropdown = binding.genderDropdown
-        homeViewModel.gender.value = genderDropdown.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the gender in local database
-
-        // - - - - - - - - - - goal text input field - - - - - - - - - -
-        val goalDropdown = binding.goalDropdown
-        homeViewModel.goal.value = goalDropdown.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the goal in local database
-
         super.onDestroyView()
         _binding = null
     }
