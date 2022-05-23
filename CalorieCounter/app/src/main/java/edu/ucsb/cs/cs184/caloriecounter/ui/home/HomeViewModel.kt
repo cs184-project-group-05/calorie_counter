@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "Home Page"
+    fun getWelcomeMessage(): String {
+        return "Hello, " + this.name.value
     }
-    val text: MutableLiveData<String> = _text
 
     private val _name = MutableLiveData<String>().apply {
         value = null
@@ -39,5 +38,14 @@ class HomeViewModel : ViewModel() {
         value = null
     }
     val goal: MutableLiveData<String> = _goal
+
+    private val _streak = MutableLiveData<Int>().apply {
+        value = 0
+    }
+    val streak: MutableLiveData<Int> = _streak
+
+    fun getStreakText(): String {
+        return "Streak: " + this.streak.value + " days"
+    }
 
 }

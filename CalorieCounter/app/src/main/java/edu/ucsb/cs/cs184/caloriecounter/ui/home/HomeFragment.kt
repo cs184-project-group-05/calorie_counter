@@ -31,7 +31,7 @@ class HomeFragment : Fragment() {
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
-        title.text = homeViewModel.text.value
+        title.text = homeViewModel.getWelcomeMessage()
 
         // - - - - - - - - - - name text input field - - - - - - - - - -
         val nameInputView = binding.textInputLayout8
@@ -60,6 +60,10 @@ class HomeFragment : Fragment() {
         goalDropdown.editText?.setText(homeViewModel.goal.value)
         val goals = arrayOf("Bulk Up", "Lose Weight")
         (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
+
+        // - - - - - - - - - - streak view - - - - - - - - - -
+        val streakView: TextView = binding.streakText
+        streakView.text = homeViewModel.getStreakText()
 
         return root
     }
@@ -91,7 +95,7 @@ class HomeFragment : Fragment() {
         // - - - - - - - - - - gender text input field - - - - - - - - - -
         val genderDropdown = binding.genderDropdown
         homeViewModel.gender.value = genderDropdown.editText?.text.toString()
-        // TODO: when fragment is destroyed, update the goal in local database
+        // TODO: when fragment is destroyed, update the gender in local database
 
         // - - - - - - - - - - goal text input field - - - - - - - - - -
         val goalDropdown = binding.goalDropdown
