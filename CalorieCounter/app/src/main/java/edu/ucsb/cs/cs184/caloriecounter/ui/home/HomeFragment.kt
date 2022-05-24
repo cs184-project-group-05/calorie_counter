@@ -11,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 class HomeFragment : Fragment() {
 
@@ -31,6 +31,9 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        // - - - - - - - - - - Update Streak - - - - - - - - - -
+        updateStreak()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
@@ -128,10 +131,20 @@ class HomeFragment : Fragment() {
             ViewModelProvider(this).get(HomeViewModel::class.java)
 
         if(homeViewModel.streak.value!! <= 0){
-
+            homeViewModel.setStreak(1)
         }
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-        val currentDate = sdf.format(Date())
+        val lastLogin = homeViewModel.lastLogin.value ?: ""
+        val sdf = SimpleDateFormat("dd-MM-yyyy")
+        val c : Calendar = Calendar.getInstance()
+        val curDate = sdf.format(c.time)
+        c.add(Calendar.DATE, -1)
+        val prevDate = sdf.format(c.time)
+        if(lastLogin == prevDate){
+            homeViewModel.setStreak(homeViewModel.streak.value!! + 1)
+        }else if(lastLogin != curDate){
+            homeViewModel.setStreak(1)
+        }
+        homeViewModel.setLastLogin(curDate)
         return
     }
 

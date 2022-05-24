@@ -147,6 +147,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     fun setStreak(streak: Int): Int{
         prefRepository.setStreak(streak)
+        this.streak.value = streak
         return streak
     }
 
