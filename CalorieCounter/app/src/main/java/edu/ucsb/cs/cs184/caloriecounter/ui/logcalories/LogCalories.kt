@@ -1,6 +1,7 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.logcalories
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class LogCaloriesFragment : Fragment() {
         newInputLayout.hint = "Enter # of Calories"
         newInputLayout.boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
         val newInput = TextInputEditText(newInputLayout.context)
+        newInput.inputType = InputType.TYPE_CLASS_NUMBER
         newInput.setSingleLine()
         newInputLayout.addView(newInput)
         mealInputsContainer.addView(newInputLayout)
