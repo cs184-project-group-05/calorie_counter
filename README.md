@@ -28,6 +28,6 @@ This app aims to retain the motivation that people have towards working out and 
 #### Emails
 Aaron Huang: \
 Andy Ho: \
-Cameron King: \
+Cameron King: csking@ucsb.edu \
 ChanChan Mao: \
 Mathew Kramsch: mathewkramsch@ucsb.edu
