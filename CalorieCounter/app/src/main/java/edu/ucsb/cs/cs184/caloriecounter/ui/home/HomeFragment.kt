@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         // - - - - - - - - - - Update Streak - - - - - - - - - -
-        updateStreak()
+        homeViewModel.updateStreak()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
@@ -93,7 +93,7 @@ class HomeFragment : Fragment() {
             homeViewModel.setGoal(goalDropdown.editText?.text.toString())
 
             //set calorie goal
-            homeViewModel.setCalGoal(calcGoal())
+            homeViewModel.setCalGoal(homeViewModel.calcGoal())
 
             // display appropriate snackbar text, also update the title text
             val snackbarText = homeViewModel.getSnackbarText(validInputAge, validInputWeight, validInputHeight)
@@ -104,49 +104,7 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    //function that calculates target daily goal given user input.
-    //Temporary calculations for now based off of
-    private fun calcGoal() : Int{
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        val weight : Double = homeViewModel.weight.value!!.toDouble()
-        val height : Double = homeViewModel.height.value!!.toDouble()
-        val age : Double = homeViewModel.age.value!!.toDouble()
-
-        //could also use setScale if we want to display number at higher precisions.
-        val calGoal = if(homeViewModel.gender.value == "Male"){
-            (6.23f * weight * 1.15f) + (12.7f*height)-(6.8f*age) + 66f
-        }else{
-            655 + (4.35 *weight* 1.20) + (4.7 *height)-(4.7 * age)
-        }
-        return calGoal.toInt()
-    }
-
-    //function that updates the streak of the user.
-    //checks to see if a day has passed by looking at last and current login time.
-    //Temporarily placed here. Could also be placed in main.
-    private fun updateStreak(){
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        if(homeViewModel.streak.value!! <= 0){
-            homeViewModel.setStreak(1)
-        }
-        val lastLogin = homeViewModel.lastLogin.value ?: ""
-        val sdf = SimpleDateFormat("dd-MM-yyyy")
-        val c : Calendar = Calendar.getInstance()
-        val curDate = sdf.format(c.time)
-        c.add(Calendar.DATE, -1)
-        val prevDate = sdf.format(c.time)
-        if(lastLogin == prevDate){
-            homeViewModel.setStreak(homeViewModel.streak.value!! + 1)
-        }else if(lastLogin != curDate){
-            homeViewModel.setStreak(1)
-        }
-        homeViewModel.setLastLogin(curDate)
-        return
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
