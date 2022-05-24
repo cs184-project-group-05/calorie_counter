@@ -1,14 +1,14 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.logcalories
 
-import android.app.ActionBar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import edu.ucsb.cs.cs184.caloriecounter.databinding.LogCaloriesFragmentBinding
 
 class LogCaloriesFragment : Fragment() {
@@ -27,46 +27,27 @@ class LogCaloriesFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-
-        /* adding meal buttons:
-            view models stores number of buttons
-            add meal input click -> increases number
-            numMealInputs -> liveView calls createMealInputs on change
-            createMealInputs -> creates text inputs and adds to container
-         */
-
+        val numMealInputsInt: Int? = homeViewModel.numMealInputs.value
+        for (i in 1..numMealInputsInt!!) {
+            addNewMealInput()
+        }
         val addMealButton = binding.button
         addMealButton.setOnClickListener{  // increases number of meal inputs by 1
             homeViewModel.addMealInput()
+            addNewMealInput()
         }
-
-        homeViewModel.numMealInputs.observe(viewLifecycleOwner) {
-            // when numMealInputs changes, draw list of inputs
-            // dynamically create text inputs and add to mealButtonsContainer
-
-            val testView: TextView = binding.testNumber
-            testView.text = it.toString()
-
-
-            val mealInputsContainer = binding.linearLayout
-//            val mealInputs = mutableListOf<com.google.android.material.textfield.TextInputLayout>()
-            val numMealInputsInt: Int = it
-            for (i in 1..numMealInputsInt) {
-                val newInput = com.google.android.material.textfield.TextInputLayout(requireActivity())
-                newInput.hint = "Enter # of Calories"
-                newInput.minWidth = 200
-                newInput.minimumHeight = 50
-                val params = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-                newInput.layoutParams = params
-//                mealInputs.add(newInput)
-                mealInputsContainer.addView(newInput)
-            }
-        }
-
         return root
+    }
+
+    private fun addNewMealInput() {
+        val mealInputsContainer = binding.linearLayout
+        val newInputLayout = TextInputLayout(requireActivity(),null, com.google.android.material.R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox)
+        newInputLayout.hint = "Enter # of Calories"
+        newInputLayout.boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
+        val newInput = TextInputEditText(newInputLayout.context)
+        newInput.setSingleLine()
+        newInputLayout.addView(newInput)
+        mealInputsContainer.addView(newInputLayout)
     }
 
     override fun onDestroyView() {
