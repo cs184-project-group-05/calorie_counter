@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeFragment : Fragment() {
 
@@ -87,6 +89,9 @@ class HomeFragment : Fragment() {
             // set goal
             homeViewModel.setGoal(goalDropdown.editText?.text.toString())
 
+            //set calorie goal
+            homeViewModel.setCalGoal(calcGoal())
+
             // display appropriate snackbar text, also update the title text
             val snackbarText = homeViewModel.getSnackbarText(validInputAge, validInputWeight, validInputHeight)
             Snackbar.make(fab, snackbarText, Snackbar.LENGTH_LONG).show()
@@ -94,6 +99,40 @@ class HomeFragment : Fragment() {
         }
 
         return root
+    }
+
+    //function that calculates target daily goal given user input.
+    //Temporary calculations for now based off of
+    private fun calcGoal() : Int{
+        val homeViewModel =
+            ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        val weight : Double = homeViewModel.weight.value!!.toDouble()
+        val height : Double = homeViewModel.height.value!!.toDouble()
+        val age : Double = homeViewModel.age.value!!.toDouble()
+
+        //could also use setScale if we want to display number at higher precisions.
+        val calGoal = if(homeViewModel.gender.value == "Male"){
+            (6.23f * weight * 1.15f) + (12.7f*height)-(6.8f*age) + 66f
+        }else{
+            655 + (4.35 *weight* 1.20) + (4.7 *height)-(4.7 * age)
+        }
+        return calGoal.toInt()
+    }
+
+    //function that updates the streak of the user.
+    //checks to see if a day has passed by looking at last and current login time.
+    //Temporarily placed here. Could also be placed in main.
+    private fun updateStreak(){
+        val homeViewModel =
+            ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        if(homeViewModel.streak.value!! <= 0){
+
+        }
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val currentDate = sdf.format(Date())
+        return
     }
 
     override fun onDestroyView() {

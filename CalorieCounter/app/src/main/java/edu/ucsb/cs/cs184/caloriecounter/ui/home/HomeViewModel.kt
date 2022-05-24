@@ -47,6 +47,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
     val streak: MutableLiveData<Int> = _streak
 
+    private val _lastLogin = MutableLiveData<String>().apply{
+        value = prefRepository.getLastLogin()
+    }
+    val lastLogin: MutableLiveData<String> = _lastLogin
+
     // - - - - - - - - - - getters - - - - - - - - - -
 
     fun getWelcomeMessage(): String {
@@ -133,6 +138,22 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         prefRepository.setGoal(goal)
         this.goal.value = goal
         return goal
+    }
+
+    fun setCalGoal(calGoal: Int): Int{
+        prefRepository.setCalorieGoal(calGoal)
+        return calGoal
+    }
+
+    fun setStreak(streak: Int): Int{
+        prefRepository.setStreak(streak)
+        return streak
+    }
+
+    fun setLastLogin(lastLogin: String): String{
+        prefRepository.setLastLogin(lastLogin)
+        this.lastLogin.value = lastLogin
+        return lastLogin
     }
 
     // - - - - - - - - - - private helper functions - - - - - - - - - -
