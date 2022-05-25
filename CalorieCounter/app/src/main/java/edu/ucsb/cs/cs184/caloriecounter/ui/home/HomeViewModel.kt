@@ -3,7 +3,10 @@ package edu.ucsb.cs.cs184.caloriecounter.ui.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeViewModel(application: Application): AndroidViewModel(application) {
 
@@ -46,6 +49,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         value = prefRepository.getStreak()
     }
     val streak: MutableLiveData<Int> = _streak
+
+    private val _lastLogin = MutableLiveData<String>().apply{
+        value = prefRepository.getLastLogin()
+    }
+    val lastLogin: MutableLiveData<String> = _lastLogin
 
     // - - - - - - - - - - getters - - - - - - - - - -
 
@@ -135,6 +143,62 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return goal
     }
 
+    fun setCalGoal(calGoal: Int): Int{
+        prefRepository.setCalorieGoal(calGoal)
+        return calGoal
+    }
+
+    fun setStreak(streak: Int): Int{
+        prefRepository.setStreak(streak)
+        this.streak.value = streak
+        return streak
+    }
+
+    fun setLastLogin(lastLogin: String): String{
+        prefRepository.setLastLogin(lastLogin)
+        this.lastLogin.value = lastLogin
+        return lastLogin
+    }
+
+    // - - - - - - - - - - public functions - - - - - - - - - -
+
+    //function that calculates target daily goal given user input.
+    fun calcGoal() : Int{
+        val weight : Double = this.weight.value!!.toDouble()
+        val height : Double = this.height.value!!.toDouble()
+        val age : Double = this.age.value!!.toDouble()
+
+        //could also use setScale if we want to display number at higher precisions.
+        val calGoal = if(this.gender.value == "Male"){
+            (6.23f * weight * 1.15f) + (12.7f*height)-(6.8f*age) + 66f
+        }else{
+            655 + (4.35 *weight* 1.20) + (4.7 *height)-(4.7 * age)
+        }
+        return calGoal.toInt()
+    }
+
+    //function that updates the streak of the user.
+    //checks to see if a day has passed by looking at last and current login time.
+    //TODO:Update streak so that it only increments if user has met their calorie goal the previous day.
+    fun updateStreak(){
+        if(this.streak.value!! <= 0){
+            this.setStreak(1)
+        }
+        val lastLogin = this.lastLogin.value ?: ""
+        val sdf = SimpleDateFormat("dd-MM-yyyy")
+        val c : Calendar = Calendar.getInstance()
+        val curDate = sdf.format(c.time)
+        c.add(Calendar.DATE, -1)
+        val prevDate = sdf.format(c.time)
+        if(lastLogin == prevDate){
+            this.setStreak(this.streak.value!! + 1)
+        }else if(lastLogin != curDate){
+            this.setStreak(1)
+        }
+        this.setLastLogin(curDate)
+        return
+    }
+
     // - - - - - - - - - - private helper functions - - - - - - - - - -
 
     private fun isWholeNumber(s: String): Boolean {
@@ -148,5 +212,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // ie. returns false for negative numbers
         return s.all {char -> char.isDigit() || char == '.'}
     }
+
 
 }

@@ -9,7 +9,7 @@ class PrefRepository(val context: Context) {
     // which is an exceedingly simple local database used to store key-value pairs
     // no need for Jetpack Room with the amount of information we're storing
 
-    private val pref: SharedPreferences = context.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+    private val pref: SharedPreferences = context.getSharedPreferences(context.resources.getString(R.string.pref), Context.MODE_PRIVATE)
 
     private val editor = pref.edit()
 
@@ -55,6 +55,18 @@ class PrefRepository(val context: Context) {
         "streak".put(streak)
     }
 
+    fun setCalorieCount(count: Int){
+        "calorie_count".put(count)
+    }
+
+    fun setCalorieGoal(goal: Int){
+        "calorie_goal".put(goal)
+    }
+
+    fun setLastLogin(date: String){
+        "last_login".put(date)
+    }
+
     fun getName() = "name".getString()
 
     fun getAge() = "age".getString()
@@ -68,4 +80,10 @@ class PrefRepository(val context: Context) {
     fun getGoal() = "goal".getString()
 
     fun getStreak() = "streak".getInt()
+
+    fun getCalorieCount() = "calorie_count".getInt()
+
+    fun getCalorieGoal() = "calorie_goal".getInt()
+
+    fun getLastLogin() = "last_login".getString()
 }

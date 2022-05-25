@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class HomeFragment : Fragment() {
 
@@ -29,6 +31,9 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        // - - - - - - - - - - Update Streak - - - - - - - - - -
+        homeViewModel.updateStreak()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
@@ -87,6 +92,9 @@ class HomeFragment : Fragment() {
             // set goal
             homeViewModel.setGoal(goalDropdown.editText?.text.toString())
 
+            //set calorie goal
+            homeViewModel.setCalGoal(homeViewModel.calcGoal())
+
             // display appropriate snackbar text, also update the title text
             val snackbarText = homeViewModel.getSnackbarText(validInputAge, validInputWeight, validInputHeight)
             Snackbar.make(fab, snackbarText, Snackbar.LENGTH_LONG).show()
@@ -95,6 +103,8 @@ class HomeFragment : Fragment() {
 
         return root
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
