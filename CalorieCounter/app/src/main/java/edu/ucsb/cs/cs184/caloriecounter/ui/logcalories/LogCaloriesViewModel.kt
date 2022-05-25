@@ -11,10 +11,6 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     // - - - - - - - - - - member variables - - - - - - - - - -
     private val prefRepository by lazy { PrefRepository(application) }
 
-    private val _text = MutableLiveData<String>().apply {
-        value = prefRepository.getName()
-    }
-
     private val _calGoal = MutableLiveData<Int>().apply{
         value = prefRepository.getCalorieGoal()
     }
@@ -25,4 +21,10 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     }
     val calCount: MutableLiveData<Int> = _calCount
 
+    // - - - - - - - - - - public member functions - - - - - - - - - -
+    //function updates values from database when called.
+    fun update(){
+        this.calGoal.value = prefRepository.getCalorieGoal()
+        this.calCount.value = prefRepository.getCalorieGoal()
+    }
 }
