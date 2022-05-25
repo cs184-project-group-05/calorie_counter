@@ -1,23 +1,37 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.logcalories
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 
-class LogCaloriesViewModel : ViewModel() {
-    private val _numMealInputs = MutableLiveData<Int>().apply {
-        value = 0
+class LogCaloriesViewModel(application: Application) : AndroidViewModel(application) {
+    // - - - - - - - - - - member variables - - - - - - - - - -
+    private val prefRepository by lazy { PrefRepository(application) }
+    private val _text = MutableLiveData<String>().apply {
+        value = prefRepository.getName()
     }
-    private val _totalCalories = MutableLiveData<Int>().apply {
+    private val _calGoal = MutableLiveData<Int>().apply{
+        value = prefRepository.getCalorieGoal()
+    }
+    val calGoal: MutableLiveData<Int> = _calGoal
+    private val _numMealInputs = MutableLiveData<Int>().apply {
         value = 0
     }
     private val _calorieArray = MutableLiveData<MutableList<Int>>().apply {
         value = mutableListOf<Int>()
     }
+    private val _calCount = MutableLiveData<Int>().apply{
+        value = prefRepository.getCalorieCount()
+    }
 
-    val totalCalories: LiveData<Int> = _totalCalories
+    val calCount: MutableLiveData<Int> = _calCount
+    val calorieArray: MutableLiveData<MutableList<Int>> = _calorieArray
     val numMealInputs: LiveData<Int> = _numMealInputs
 
+    // - - - - - - - - - - helper functions - - - - - - - - - -
     fun setCalorieI(i: Int, amount: Int) {
         // sets calorieArray[i] = amount
         _calorieArray.value?.set(i, amount)
@@ -33,6 +47,6 @@ class LogCaloriesViewModel : ViewModel() {
         _calorieArray.value?.forEach{ item ->
             total += item
         }
-        _totalCalories.value = total
+        _calCount.value = total
     }
 }

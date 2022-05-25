@@ -17,6 +17,7 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -40,25 +41,25 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/text_cal_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calorie Goal: 2406 cal./day"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
+        android:text="Calorie Goal: cal./day"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_log" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/text_daily_cal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Daily Total: 1720 calories"
+        android:text="Daily Total:  calories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/text_cal_goal" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -68,7 +69,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3">
+        app:layout_constraintTop_toBottomOf="@+id/text_daily_cal">
     </LinearLayout>
 
 
