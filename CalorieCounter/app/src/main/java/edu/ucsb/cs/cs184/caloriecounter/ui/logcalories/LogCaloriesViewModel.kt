@@ -24,15 +24,17 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         value = prefRepository.getCalorieCount()
     }
 
-    // - - - - - - - - - - public member functions - - - - - - - - - -
-    //function updates values from database when called.
-    fun update(){
-        this.calGoal.value = prefRepository.getCalorieGoal()
-        this.calCount.value = prefRepository.getCalorieGoal()
-        
+
     val calCount: MutableLiveData<Int> = _calCount
     val calorieArray: MutableLiveData<MutableList<Int>> = _calorieArray
     val numMealInputs: LiveData<Int> = _numMealInputs
+
+    // - - - - - - - - - - public member functions - - - - - - - - - -
+    //function updates values from database when called.
+    fun update() {
+        this.calGoal.value = prefRepository.getCalorieGoal()
+        this.calCount.value = prefRepository.getCalorieGoal()
+    }
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
     fun setCalorieI(i: Int, amount: Int) {
