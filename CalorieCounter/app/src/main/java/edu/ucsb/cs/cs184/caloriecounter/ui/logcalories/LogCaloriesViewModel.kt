@@ -37,6 +37,7 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
+    //TODO: Update calorie, mealarrinfo, mealnum information not only in viewmodel, but also to database.
     fun setCalorieI(i: Int, amount: Int) {
         // sets calorieArray[i] = amount
         _calorieArray.value?.set(i, amount)
@@ -52,6 +53,7 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         _calorieArray.value?.forEach{ item ->
             total += item
         }
+        prefRepository.setCalorieCount(total)
         _calCount.value = total
     }
 }

@@ -32,8 +32,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // - - - - - - - - - - Update Streak - - - - - - - - - -
-        homeViewModel.updateStreak()
+        // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
+        homeViewModel.updateDate()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
