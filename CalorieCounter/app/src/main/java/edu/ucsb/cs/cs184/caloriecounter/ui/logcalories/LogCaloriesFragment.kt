@@ -25,6 +25,9 @@ class LogCaloriesFragment : Fragment() {
         _binding = LogCaloriesFragmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // - - - - - - - - - - Update Function - - - - - - - - - -
+        logCaloriesViewModel.update()
+
         // - - - - - - - - - - Calorie Goal Text - - - - - - - - - -
         val calGoalValue = logCaloriesViewModel.calGoal.value.toString()
         binding.textCalGoal.text =
