@@ -19,6 +19,9 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     private val _numMealInputs = MutableLiveData<Int>().apply {
         value = 0
     }
+    private val _numMealInputsCreated = MutableLiveData<Int>().apply {
+        value = 0
+    }
     private val _calorieArray = MutableLiveData<MutableList<Int>>().apply {
         value = mutableListOf<Int>()
     }
@@ -27,14 +30,21 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     val calCount: MutableLiveData<Int> = _calCount
     val calorieArray: MutableLiveData<MutableList<Int>> = _calorieArray
     val numMealInputs: LiveData<Int> = _numMealInputs
+    val numMealInputsCreated: LiveData<Int> = _numMealInputsCreated
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
     fun setCalorieI(i: Int, amount: Int) {   // sets calorieArray[i] = amount
         _calorieArray.value?.set(i, amount)
     }
     fun addMealInputViewModel() {  // increases count of meal inputs & adds value to calorieArray
+        _numMealInputsCreated.value = _numMealInputsCreated.value?.plus(1)
         _numMealInputs.value = _numMealInputs.value?.plus(1)
         _calorieArray.value?.add(0)
+    }
+    fun deleteMealInputViewModel(index: Int) {  // decrements meal input count
+        _numMealInputs.value = _numMealInputs.value?.minus(1)
+        _calorieArray.value?.set(index, -1)  // -1 denotes deleted input
+        calculateTotal()
     }
     fun calculateTotal() {  // calculates calorie total from calorieArray and sets totalCalories
         var total: Int = 0

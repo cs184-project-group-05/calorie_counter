@@ -35,7 +35,7 @@ class LogCaloriesFragment : Fragment() {
         }
 
         // - - - - - - - - - - Draw Meal Inputs from Saved State - - - - - - - - - -
-        val numMealInputsInt = logCaloriesViewModel.numMealInputs.value
+        val numMealInputsInt = logCaloriesViewModel.numMealInputsCreated.value
         if (numMealInputsInt==0) {  // to draw initial meal input
             logCaloriesViewModel.addMealInputViewModel()
         }
@@ -49,30 +49,27 @@ class LogCaloriesFragment : Fragment() {
         // - - - - - - - - - - Add Meal Input on Button Click - - - - - - - - - -
         val addMealButton = binding.button
         addMealButton.setOnClickListener {  // increases number of meal inputs by 1
-            logCaloriesViewModel.addMealInputViewModel()
-            val newIndex = logCaloriesViewModel.numMealInputs.value!! -1
-            addNewMealInput(logCaloriesViewModel, newIndex)
+            if (logCaloriesViewModel.numMealInputs.value!! < 5) {
+                logCaloriesViewModel.addMealInputViewModel()
+                val newIndex = logCaloriesViewModel.numMealInputsCreated.value!! - 1
+                addNewMealInput(logCaloriesViewModel, newIndex)
+                if (logCaloriesViewModel.numMealInputs.value!! == 5)
+                    binding.button.visibility = View.GONE
+            }
         }
         return root
     }
 
+    // - - - - - - - - - - Helper Functions - - - - - - - - - -
     private fun addFirstMealInput(logCaloriesViewModel: LogCaloriesViewModel) {
         // generates first meal input element (without delete button), adds to layout
         val mealInputsContainer = binding.linearLayout
         val newInputView: View = layoutInflater.inflate(R.layout.meal_input_1, null)
         val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
         newInput.id = 0
-        newInput.doAfterTextChanged {  // calculates calorie total on input change
-            val strAmount: String = newInput.text.toString()
-            var amount = 0
-            if (strAmount != "")
-                amount = Integer.parseInt(strAmount)
-            logCaloriesViewModel.setCalorieI(0, amount)
-            logCaloriesViewModel.calculateTotal()
-        }
+        newInput.doAfterTextChanged { handleChangeText(newInput, logCaloriesViewModel, 0) }
         mealInputsContainer.addView(newInputView)
     }
-
     private fun addNewMealInput(logCaloriesViewModel: LogCaloriesViewModel, index: Int) {
         // generates new meal input element, adds it to layout
         val mealInputsContainer = binding.linearLayout
@@ -80,24 +77,26 @@ class LogCaloriesFragment : Fragment() {
         val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
         val deleteButton: Button = newInputView.findViewById(R.id.deleteButton)
         newInput.id = index
-        newInput.doAfterTextChanged {  // calculates calorie total on input change
-            val strAmount: String = newInput.text.toString()
-            var amount = 0
-            if (strAmount != "")
-                amount = Integer.parseInt(strAmount)
-            logCaloriesViewModel.setCalorieI(index, amount)
-            logCaloriesViewModel.calculateTotal()
-        }
+        newInput.doAfterTextChanged { handleChangeText(newInput, logCaloriesViewModel, index) }
         deleteButton.setOnClickListener {  // delete button
             if (index!=0) {
-                logCaloriesViewModel.setCalorieI(index, -1)
-                logCaloriesViewModel.calculateTotal()
+                logCaloriesViewModel.deleteMealInputViewModel(index)
                 mealInputsContainer.removeView(newInputView)
+                binding.button.visibility = View.VISIBLE
             }
         }
         mealInputsContainer.addView(newInputView)
     }
-
+    private fun handleChangeText(input: TextInputEditText,
+                                 logCaloriesViewModel: LogCaloriesViewModel, index: Int) {
+        // calculates calorie total on input change
+        val strAmount: String = input.text.toString()
+        var amount = 0
+        if (strAmount != "" && strAmount.length < 10)
+            amount = Integer.parseInt(strAmount)
+        logCaloriesViewModel.setCalorieI(index, amount)
+        logCaloriesViewModel.calculateTotal()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
