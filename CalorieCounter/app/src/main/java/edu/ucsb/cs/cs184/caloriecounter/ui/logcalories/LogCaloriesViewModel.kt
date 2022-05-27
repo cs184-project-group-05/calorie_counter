@@ -39,7 +39,7 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     fun calculateTotal() {  // calculates calorie total from calorieArray and sets totalCalories
         var total: Int = 0
         _calorieArray.value?.forEach{ item ->
-            total += item
+            if (item != -1) total += item
         }
         _calCount.value = total
     }
