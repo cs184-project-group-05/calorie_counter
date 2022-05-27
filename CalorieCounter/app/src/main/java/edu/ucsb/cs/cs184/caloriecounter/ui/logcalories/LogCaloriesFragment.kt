@@ -2,7 +2,6 @@ package edu.ucsb.cs.cs184.caloriecounter.ui.logcalories
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import edu.ucsb.cs.cs184.caloriecounter.R
 import edu.ucsb.cs.cs184.caloriecounter.databinding.LogCaloriesFragmentBinding
 
@@ -27,13 +25,11 @@ class LogCaloriesFragment : Fragment() {
 
         // - - - - - - - - - - Calorie Goal Text - - - - - - - - - -
         val calGoalValue = logCaloriesViewModel.calGoal.value.toString()
-        binding.textCalGoal.text =
-            "${getString(R.string.calGoal1)} $calGoalValue ${getString(R.string.calGoal2)}"
+        binding.textCalGoal.text = "${getString(R.string.calGoal1)} $calGoalValue ${getString(R.string.calGoal2)}"
 
         // - - - - - - - - - - Daily Total Text - - - - - - - - - -
         logCaloriesViewModel.calCount.observe(viewLifecycleOwner) {
-            binding.textDailyCal.text =
-                "${getString(R.string.dailyTotal1)} $it ${getString(R.string.dailyTotal2)}"
+            binding.textDailyCal.text = "${getString(R.string.dailyTotal1)} $it ${getString(R.string.dailyTotal2)}"
         }
 
         // - - - - - - - - - - Draw Meal Inputs from Saved State - - - - - - - - - -
@@ -41,12 +37,10 @@ class LogCaloriesFragment : Fragment() {
         if (numMealInputsInt==0) {  // to draw initial meal input
             logCaloriesViewModel.addMealInputViewModel()
         }
-        var index = 0
-        logCaloriesViewModel.calorieArray.value?.forEach { item ->
+        logCaloriesViewModel.calorieArray.value?.forEachIndexed { index, calorieValue ->
             val newInput = getNewMealInput()
             newInput.id = index
-            index++
-            var inputText = item.toString()
+            var inputText = calorieValue.toString()
             if (inputText == "0") inputText = ""
             newInput.setText(inputText)
             newInput.doAfterTextChanged {  // calculates calorie total on input change
@@ -78,16 +72,11 @@ class LogCaloriesFragment : Fragment() {
     }
 
     private fun getNewMealInput(): TextInputEditText {
+        // generates new meal input element, adds it to layout, returns it
         val mealInputsContainer = binding.linearLayout
-        val newInputLayout = TextInputLayout(requireActivity(),null,
-            com.google.android.material.R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox)
-        newInputLayout.hint = "Enter # of Calories"
-        newInputLayout.boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
-        val newInput = TextInputEditText(newInputLayout.context)
-        newInput.inputType = InputType.TYPE_CLASS_NUMBER
-        newInput.setSingleLine()
-        newInputLayout.addView(newInput)
-        mealInputsContainer.addView(newInputLayout)
+        val newInputView: View = layoutInflater.inflate(R.layout.meal_input, null)
+        val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
+        mealInputsContainer.addView(newInputView)
         return newInput
     }
 

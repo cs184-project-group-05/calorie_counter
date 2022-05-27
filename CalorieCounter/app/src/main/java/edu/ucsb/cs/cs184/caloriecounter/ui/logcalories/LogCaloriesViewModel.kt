@@ -10,39 +10,33 @@ import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 class LogCaloriesViewModel(application: Application) : AndroidViewModel(application) {
     // - - - - - - - - - - member variables - - - - - - - - - -
     private val prefRepository by lazy { PrefRepository(application) }
-    private val _text = MutableLiveData<String>().apply {
-        value = prefRepository.getName()
-    }
     private val _calGoal = MutableLiveData<Int>().apply{
         value = prefRepository.getCalorieGoal()
     }
-    val calGoal: MutableLiveData<Int> = _calGoal
+    private val _calCount = MutableLiveData<Int>().apply{
+        value = 0
+    }
     private val _numMealInputs = MutableLiveData<Int>().apply {
         value = 0
     }
     private val _calorieArray = MutableLiveData<MutableList<Int>>().apply {
         value = mutableListOf<Int>()
     }
-    private val _calCount = MutableLiveData<Int>().apply{
-        value = prefRepository.getCalorieCount()
-    }
 
+    val calGoal: MutableLiveData<Int> = _calGoal
     val calCount: MutableLiveData<Int> = _calCount
     val calorieArray: MutableLiveData<MutableList<Int>> = _calorieArray
     val numMealInputs: LiveData<Int> = _numMealInputs
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
-    fun setCalorieI(i: Int, amount: Int) {
-        // sets calorieArray[i] = amount
+    fun setCalorieI(i: Int, amount: Int) {   // sets calorieArray[i] = amount
         _calorieArray.value?.set(i, amount)
     }
-    fun addMealInputViewModel() {
-        // increases count of meal inputs & adds value to calorieArray
+    fun addMealInputViewModel() {  // increases count of meal inputs & adds value to calorieArray
         _numMealInputs.value = _numMealInputs.value?.plus(1)
         _calorieArray.value?.add(0)
     }
-    fun calculateTotal() {
-        // calculates calorie total from calorieArray and sets totalCalories
+    fun calculateTotal() {  // calculates calorie total from calorieArray and sets totalCalories
         var total: Int = 0
         _calorieArray.value?.forEach{ item ->
             total += item
