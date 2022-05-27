@@ -25,6 +25,6 @@
     <fragment
         android:id="@+id/navigation_log_calories"
         android:name="edu.ucsb.cs.cs184.caloriecounter.ui.logcalories.LogCaloriesFragment"
-        android:label="LogCaloriesFragment"
+        android:label="Log Calories"
         tools:layout="@layout/log_calories_fragment" />
 </navigation>
