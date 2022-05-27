@@ -164,6 +164,13 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     //function that calculates target daily goal given user input.
     fun calcGoal() : Int{
+        //returns 0 if values aren't available.
+        if(this.weight.value == "" || this.weight.value == null ||
+            this.height.value == "" || this.weight.value == null ||
+            this.age.value == "" || this.age.value == null ||
+            this.gender.value == null){
+            return 0
+        }
         val weight : Double = this.weight.value!!.toDouble()
         val height : Double = this.height.value!!.toDouble()
         val age : Double = this.age.value!!.toDouble()

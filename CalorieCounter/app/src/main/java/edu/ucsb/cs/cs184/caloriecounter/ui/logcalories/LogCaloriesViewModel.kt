@@ -32,6 +32,12 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     val numMealInputs: LiveData<Int> = _numMealInputs
     val numMealInputsCreated: LiveData<Int> = _numMealInputsCreated
 
+    // - - - - - - - - - - public member functions - - - - - - - - - -
+    //function updates values from database when called.
+    fun update() {
+        this.calGoal.value = prefRepository.getCalorieGoal()
+    }
+
     // - - - - - - - - - - helper functions - - - - - - - - - -
     fun setCalorieI(i: Int, amount: Int) {   // sets calorieArray[i] = amount
         _calorieArray.value?.set(i, amount)
