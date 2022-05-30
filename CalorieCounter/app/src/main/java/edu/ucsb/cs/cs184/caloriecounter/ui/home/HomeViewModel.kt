@@ -184,26 +184,25 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return calGoal.toInt()
     }
 
-    //function that updates the streak of the user.
-    //checks to see if a day has passed by looking at last and current login time.
-    //TODO:Update streak so that it only increments if user has met their calorie goal the previous day.
-    fun updateStreak(){
-        if(this.streak.value!! <= 0){
-            this.setStreak(1)
-        }
+    /*function that checks if the current date is different from the user's previous login
+    and updates various features based on date changes. This includes Streak and Meal Logs.
+    */
+    fun updateDate(){
         val lastLogin = this.lastLogin.value ?: ""
         val sdf = SimpleDateFormat("dd-MM-yyyy")
         val c : Calendar = Calendar.getInstance()
         val curDate = sdf.format(c.time)
-        c.add(Calendar.DATE, -1)
-        val prevDate = sdf.format(c.time)
-        if(lastLogin == prevDate){
-            this.setStreak(this.streak.value!! + 1)
-        }else if(lastLogin != curDate){
-            this.setStreak(1)
+
+        if (lastLogin != curDate){
+            c.add(Calendar.DATE, -1)
+            updateStreak(lastLogin, sdf.format(c.time))
+            c.add(Calendar.DATE, 1) //reset calendar back to original position
+
+            //TODO:reset daily total calories and reset meal array.
+            prefRepository.setCalorieCount(0)
         }
-        this.setLastLogin(curDate)
-        return
+
+        this.setLastLogin(curDate) //change last login to the current date.
     }
 
     // - - - - - - - - - - private helper functions - - - - - - - - - -
@@ -220,5 +219,19 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return s.all {char -> char.isDigit() || char == '.'}
     }
 
+    //function that updates the streak of the user.
+    private fun updateStreak(lastLogin: String, prevDate: String){
+        if(this.streak.value == null || this.streak.value!! <= 0){
+            this.setStreak(1)
+            return
+        }
 
+        if(lastLogin == prevDate && prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount()){
+            //only achieved when calorie count is under calorie goal
+            this.setStreak(this.streak.value!! + 1)
+        }else{
+            this.setStreak(1)
+        }
+        return
+    }
 }

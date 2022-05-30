@@ -36,6 +36,7 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     //function updates values from database when called.
     fun update() {
         this.calGoal.value = prefRepository.getCalorieGoal()
+        this.calCount.value = prefRepository.getCalorieCount()
     }
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
@@ -58,5 +59,6 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
             if (item != -1) total += item
         }
         _calCount.value = total
+        prefRepository.setCalorieCount(total)
     }
 }
