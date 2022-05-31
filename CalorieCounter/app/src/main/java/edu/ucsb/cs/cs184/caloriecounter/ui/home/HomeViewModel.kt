@@ -54,8 +54,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         value = prefRepository.getLastLogin()
     }
     val lastLogin: MutableLiveData<String> = _lastLogin
+
+    // data locking boolean flags
     private val _canIncreaseStreak = MutableLiveData<Boolean>().apply { value = false }
     private val _canDecreaseStreak = MutableLiveData<Boolean>().apply { value = false }
+    private val _canSetNewGoalMet = MutableLiveData<Boolean>().apply { value = false }
 
     // - - - - - - - - - - getters - - - - - - - - - -
 
@@ -197,12 +200,18 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
         if (lastLogin != curDate){
             c.add(Calendar.DATE, -1)
-            _canIncreaseStreak.value = true  // indicates that streak can be increased when calories submit
 
             // if goal not met on previous day, set streak to 0
             val goalMet = prefRepository.getGoalMet()
-            Log.d("goalMet", goalMet.toString())
-            if (goalMet == 0) this.setStreak(0)
+            if (goalMet == 0) {
+                this.setStreak(0)
+            }
+
+            // unlock data changes
+            _canDecreaseStreak.value = false
+            _canIncreaseStreak.value = true
+            _canSetNewGoalMet.value = true
+
             c.add(Calendar.DATE, 1) // reset calendar back to original position
 
             // reset calorie UI data
@@ -210,9 +219,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             prefRepository.setNumMealInputs(0)
             prefRepository.setNumMealInputsCreated(0)
             prefRepository.setCalorieArray(mutableListOf<Int>())
-
-            // set goalMet to 0, set to 1 when goal is met
-            prefRepository.setGoalMet(0)
+            prefRepository.setGoalMet(0)  // set to 1 when goal is met
         }
 
         this.setLastLogin(curDate) //change last login to the current date.
@@ -234,6 +241,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     // function that updates the streak of the user.
     fun updateStreak() {
+        if (_canSetNewGoalMet.value == false) return
         if (this.streak.value == null || this.streak.value!! < 0) this.setStreak(0)
         if (prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount() &&
             prefRepository.getCalorieCount() >= 1
