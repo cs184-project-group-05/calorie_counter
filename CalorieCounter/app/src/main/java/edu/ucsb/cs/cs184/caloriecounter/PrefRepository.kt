@@ -83,6 +83,10 @@ class PrefRepository(val context: Context) {
         "streak".put(streak)
     }
 
+    fun setGoalMet(goalMet: Int) {
+        "goal_met".put(goalMet)
+    }
+
     // Log Calories Page Data
     fun setCalorieCount(count: Int) = "calorie_count".put(count)
     fun setCalorieGoal(goal: Int) = "calorie_goal".put(goal)
@@ -116,4 +120,7 @@ class PrefRepository(val context: Context) {
     fun getNumMealInputs() = "num_meal_inputs".getInt()
     fun getNumMealInputsCreated() = "num_meal_inputs_created".getInt()
     fun getCalorieArray() = "calorie_array".getArray()
+
+    // Streak Data
+    fun getGoalMet() = "goal_met".getInt()
 }

@@ -1,9 +1,9 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,6 +54,8 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         value = prefRepository.getLastLogin()
     }
     val lastLogin: MutableLiveData<String> = _lastLogin
+    private val _canIncreaseStreak = MutableLiveData<Boolean>().apply { value = false }
+    private val _canDecreaseStreak = MutableLiveData<Boolean>().apply { value = false }
 
     // - - - - - - - - - - getters - - - - - - - - - -
 
@@ -195,14 +197,22 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
         if (lastLogin != curDate){
             c.add(Calendar.DATE, -1)
-            updateStreak(lastLogin, sdf.format(c.time))
-            c.add(Calendar.DATE, 1) //reset calendar back to original position
+            _canIncreaseStreak.value = true  // indicates that streak can be increased when calories submit
+
+            // if goal not met on previous day, set streak to 0
+            val goalMet = prefRepository.getGoalMet()
+            Log.d("goalMet", goalMet.toString())
+            if (goalMet == 0) this.setStreak(0)
+            c.add(Calendar.DATE, 1) // reset calendar back to original position
 
             // reset calorie UI data
             prefRepository.setCalorieCount(0)
             prefRepository.setNumMealInputs(0)
             prefRepository.setNumMealInputsCreated(0)
             prefRepository.setCalorieArray(mutableListOf<Int>())
+
+            // set goalMet to 0, set to 1 when goal is met
+            prefRepository.setGoalMet(0)
         }
 
         this.setLastLogin(curDate) //change last login to the current date.
@@ -222,22 +232,28 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return s.all {char -> char.isDigit() || char == '.'}
     }
 
-    //function that updates the streak of the user.
-    private fun updateStreak(lastLogin: String, prevDate: String){
-        if(this.streak.value == null || this.streak.value!! <= 0){
-            this.setStreak(1)
-            return
-        }
-
-        if(lastLogin == prevDate &&
-            prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount() &&
+    // function that updates the streak of the user.
+    fun updateStreak() {
+        if (this.streak.value == null || this.streak.value!! < 0) this.setStreak(0)
+        if (prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount() &&
             prefRepository.getCalorieCount() >= 1
-        ){
-            //only achieved when calorie count is under calorie goal
-            this.setStreak(this.streak.value!! + 1)
-        }else{
-            this.setStreak(1)
+        ) {
+            // only allow for one streak increase per day
+            if (_canIncreaseStreak.value == true) {
+                this.setStreak(this.streak.value!! + 1)
+                _canIncreaseStreak.value = false
+                _canDecreaseStreak.value = true  // can decrease, since already increased
+            }
+            prefRepository.setGoalMet(1)
         }
-        return
+        else {
+            // only allow for one streak decrease after a streak increase
+            if (_canDecreaseStreak.value == true) {
+                this.setStreak(this.streak.value!! - 1)
+                _canDecreaseStreak.value = false
+                _canIncreaseStreak.value = true
+            }
+            prefRepository.setGoalMet(0)
+        }
     }
 }

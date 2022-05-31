@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
 
         // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
         homeViewModel.updateDate()
+        homeViewModel.updateStreak()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
