@@ -40,10 +40,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
     val gender: MutableLiveData<String> = _gender
 
-    private val _goal = MutableLiveData<String>().apply {
-        value = prefRepository.getGoal()
+    private val _goalLoseWeight = MutableLiveData<Int>().apply {
+        value = prefRepository.getGoalLoseWeight()
     }
-    val goal: MutableLiveData<String> = _goal
+    val goalLoseWeight: MutableLiveData<Int> = _goalLoseWeight
 
     private val _streak = MutableLiveData<Int>().apply {
         value = prefRepository.getStreak()
@@ -142,9 +142,9 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return gender
     }
 
-    fun setGoal(goal: String): String {
-        prefRepository.setGoal(goal)
-        this.goal.value = goal
+    fun setGoalLoseWeight(goal: Int): Int {
+        prefRepository.setGoalLoseWeight(goal)
+        this.goalLoseWeight.value = goal
         return goal
     }
 
@@ -243,9 +243,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     fun updateStreak() {
         if (_canSetNewGoalMet.value == false) return
         if (this.streak.value == null || this.streak.value!! < 0) this.setStreak(0)
-        if (prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount() &&
-            prefRepository.getCalorieCount() >= 1
-        ) {
+
+        var goalMet = prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount()
+        if (prefRepository.getGoalLoseWeight() == 0) goalMet = !goalMet
+
+        if (goalMet && prefRepository.getCalorieCount() >= 1) {
             // only allow for one streak increase per day
             if (_canIncreaseStreak.value == true) {
                 this.setStreak(this.streak.value!! + 1)

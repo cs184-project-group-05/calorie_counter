@@ -65,8 +65,11 @@ class HomeFragment : Fragment() {
 
         // - - - - - - - - - - goal selection dropdown menu input field - - - - - - - - - -
         val goalDropdown = binding.goalDropdown
-        goalDropdown.editText?.setText(homeViewModel.goal.value)
         val goals = arrayOf("Bulk Up", "Lose Weight")
+        if (homeViewModel.goalLoseWeight.value == 1)
+            goalDropdown.editText?.setText(goals[1])
+        else
+            goalDropdown.editText?.setText(goals[0])
         (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
 
         // - - - - - - - - - - streak view - - - - - - - - - -
@@ -92,7 +95,10 @@ class HomeFragment : Fragment() {
             homeViewModel.setGender(genderDropdown.editText?.text.toString())
 
             // set goal
-            homeViewModel.setGoal(goalDropdown.editText?.text.toString())
+            if (goalDropdown.editText?.text.toString() == goals[1])  // "lose weight"
+                homeViewModel.setGoalLoseWeight(1)  // lose weight == true
+            else
+                homeViewModel.setGoalLoseWeight(0)  // lose weight == false
 
             //set calorie goal
             homeViewModel.setCalGoal(homeViewModel.calcGoal())

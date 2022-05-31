@@ -10,6 +10,9 @@ import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 class LogCaloriesViewModel(application: Application) : AndroidViewModel(application) {
     // - - - - - - - - - - member variables - - - - - - - - - -
     private val prefRepository by lazy { PrefRepository(application) }
+    private val _goalLoseWeight = MutableLiveData<Int>().apply {
+        value = prefRepository.getGoalLoseWeight()
+    }
     private val _calGoal = MutableLiveData<Int>().apply{
         value = prefRepository.getCalorieGoal()
     }
@@ -26,6 +29,7 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         value = mutableListOf<Int>()
     }
 
+    val goalLoseWeight: MutableLiveData<Int> = _goalLoseWeight
     val calGoal: MutableLiveData<Int> = _calGoal
     val calCount: MutableLiveData<Int> = _calCount
     val calorieArray: MutableLiveData<MutableList<Int>> = _calorieArray
@@ -33,13 +37,14 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     val numMealInputsCreated: LiveData<Int> = _numMealInputsCreated
 
     // - - - - - - - - - - public member functions - - - - - - - - - -
-    //function updates values from database when called.
+    // function updates values from database when called.
     fun update() {
         _calGoal.value = prefRepository.getCalorieGoal()
         _calCount.value = prefRepository.getCalorieCount()
         _numMealInputs.value = prefRepository.getNumMealInputs()
         _numMealInputsCreated.value = prefRepository.getNumMealInputsCreated()
         _calorieArray.value = prefRepository.getCalorieArray()
+        _goalLoseWeight.value = prefRepository.getGoalLoseWeight()
     }
 
     // - - - - - - - - - - helper functions - - - - - - - - - -

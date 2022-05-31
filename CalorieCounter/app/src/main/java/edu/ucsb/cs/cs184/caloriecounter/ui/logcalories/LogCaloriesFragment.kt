@@ -30,7 +30,10 @@ class LogCaloriesFragment : Fragment() {
 
         // - - - - - - - - - - Calorie Goal Text - - - - - - - - - -
         val calGoalValue = logCaloriesViewModel.calGoal.value.toString()
-        binding.textCalGoal.text = "${getString(R.string.calGoal1)} $calGoalValue ${getString(R.string.calGoal2)}"
+        var calGoal1 = getString(R.string.calGoal1_under)
+        if (logCaloriesViewModel.goalLoseWeight.value == 0)  // if lose weight == false
+            calGoal1 = getString(R.string.calGoal1_over)
+        binding.textCalGoal.text = "$calGoal1 $calGoalValue ${getString(R.string.calGoal2)}"
 
         // - - - - - - - - - - Daily Total Text - - - - - - - - - -
         logCaloriesViewModel.calCount.observe(viewLifecycleOwner) {

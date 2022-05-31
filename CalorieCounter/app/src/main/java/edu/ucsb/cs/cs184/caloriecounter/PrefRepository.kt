@@ -75,8 +75,8 @@ class PrefRepository(val context: Context) {
         "gender".put(gender)
     }
 
-    fun setGoal(goal: String) {
-        "goal".put(goal)
+    fun setGoalLoseWeight(goalLoseWeight: Int) {
+        "goal_lose_weight".put(goalLoseWeight)  // 0 for false, 1 for true
     }
 
     fun setStreak(streak: Int) {
@@ -108,7 +108,7 @@ class PrefRepository(val context: Context) {
 
     fun getGender() = "gender".getString()
 
-    fun getGoal() = "goal".getString()
+    fun getGoalLoseWeight() = "goal_lose_weight".getInt()
 
     fun getStreak() = "streak".getInt()
 

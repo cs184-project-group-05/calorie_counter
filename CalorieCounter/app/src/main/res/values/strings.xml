@@ -4,7 +4,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="pref">shared_prefs</string>
-    <string name="calGoal1">Calorie Goal: Under</string>
+    <string name="calGoal1_under">Calorie Goal: Under</string>
+    <string name="calGoal1_over">Calorie Goal: Over</string>
     <string name="calGoal2">cal./day</string>
     <string name="dailyTotal1">Daily Total:</string>
     <string name="dailyTotal2">calories</string>
