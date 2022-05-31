@@ -1,10 +1,10 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.logcalories
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 
 class LogCaloriesViewModel(application: Application) : AndroidViewModel(application) {
@@ -35,26 +35,45 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
     // - - - - - - - - - - public member functions - - - - - - - - - -
     //function updates values from database when called.
     fun update() {
-        this.calGoal.value = prefRepository.getCalorieGoal()
-        this.calCount.value = prefRepository.getCalorieCount()
+        _calGoal.value = prefRepository.getCalorieGoal()
+        _calCount.value = prefRepository.getCalorieCount()
+        _numMealInputs.value = prefRepository.getNumMealInputs()
+        _numMealInputsCreated.value = prefRepository.getNumMealInputsCreated()
+        _calorieArray.value = prefRepository.getCalorieArray()
     }
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
     fun setCalorieI(i: Int, amount: Int) {   // sets calorieArray[i] = amount
-        _calorieArray.value?.set(i, amount)
+        val newCalorieArray = _calorieArray.value
+        newCalorieArray?.set(i,amount)
+        _calorieArray.value = newCalorieArray
+        prefRepository.setCalorieArray(newCalorieArray)
     }
     fun addMealInputViewModel() {  // increases count of meal inputs & adds value to calorieArray
-        _numMealInputsCreated.value = _numMealInputsCreated.value?.plus(1)
-        _numMealInputs.value = _numMealInputs.value?.plus(1)
-        _calorieArray.value?.add(0)
+        val newNumInputs = _numMealInputs.value?.plus(1)
+        val newNumInputsCreated = _numMealInputsCreated.value?.plus(1)
+        val newCalorieArray = _calorieArray.value
+        newCalorieArray?.plusAssign(0)
+        _numMealInputs.value = newNumInputs
+        _numMealInputsCreated.value = newNumInputsCreated
+        _calorieArray.value = newCalorieArray
+        prefRepository.setNumMealInputs(newNumInputs)
+        prefRepository.setNumMealInputsCreated(newNumInputsCreated)
+        prefRepository.setCalorieArray(newCalorieArray)
     }
     fun deleteMealInputViewModel(index: Int) {  // decrements meal input count
-        _numMealInputs.value = _numMealInputs.value?.minus(1)
-        _calorieArray.value?.set(index, -1)  // -1 denotes deleted input
+        val newNumInputs = _numMealInputs.value?.minus(1)
+        val newCalorieArray = _calorieArray.value
+        newCalorieArray?.set(index,-1)  // -1 denotes deleted input
+        Log.d("savedValues newCalorieArray", newCalorieArray.toString())
+        _numMealInputs.value = newNumInputs
+        _calorieArray.value = newCalorieArray
+        prefRepository.setNumMealInputs(newNumInputs)
+        prefRepository.setCalorieArray(newCalorieArray)
         calculateTotal()
     }
     fun calculateTotal() {  // calculates calorie total from calorieArray and sets totalCalories
-        var total: Int = 0
+        var total = 0
         _calorieArray.value?.forEach{ item ->
             if (item != -1) total += item
         }

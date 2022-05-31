@@ -198,8 +198,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             updateStreak(lastLogin, sdf.format(c.time))
             c.add(Calendar.DATE, 1) //reset calendar back to original position
 
-            //TODO:reset daily total calories and reset meal array.
+            // reset calorie UI data
             prefRepository.setCalorieCount(0)
+            prefRepository.setNumMealInputs(0)
+            prefRepository.setNumMealInputsCreated(0)
+            prefRepository.setCalorieArray(mutableListOf<Int>())
         }
 
         this.setLastLogin(curDate) //change last login to the current date.
@@ -226,7 +229,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             return
         }
 
-        if(lastLogin == prevDate && prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount()){
+        if(lastLogin == prevDate &&
+            prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount() &&
+            prefRepository.getCalorieCount() >= 1
+        ){
             //only achieved when calorie count is under calorie goal
             this.setStreak(this.streak.value!! + 1)
         }else{

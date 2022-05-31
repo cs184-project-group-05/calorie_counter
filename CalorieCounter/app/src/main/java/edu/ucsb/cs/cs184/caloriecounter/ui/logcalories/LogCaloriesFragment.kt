@@ -42,10 +42,14 @@ class LogCaloriesFragment : Fragment() {
         if (numMealInputsInt==0) {  // to draw initial meal input
             logCaloriesViewModel.addMealInputViewModel()
         }
+        Log.d("savedValues numMealInput", logCaloriesViewModel.numMealInputs.value.toString())
+        Log.d("savedValues numMealInputCreated", logCaloriesViewModel.numMealInputsCreated.value.toString())
+        Log.d("savedValues calCount", logCaloriesViewModel.calCount.value.toString())
+        Log.d("savedValues calorieArray", logCaloriesViewModel.calorieArray.value.toString())
         logCaloriesViewModel.calorieArray.value?.forEachIndexed { index, calorieValue ->
             if (calorieValue != -1) {
-                if (index == 0) addFirstMealInput(logCaloriesViewModel)
-                else addNewMealInput(logCaloriesViewModel, index)
+                if (index == 0) addFirstMealInput(logCaloriesViewModel, calorieValue)
+                else addNewMealInput(logCaloriesViewModel, index, calorieValue)
             }
         }
 
@@ -55,31 +59,35 @@ class LogCaloriesFragment : Fragment() {
             if (logCaloriesViewModel.numMealInputs.value!! < 5) {
                 logCaloriesViewModel.addMealInputViewModel()
                 val newIndex = logCaloriesViewModel.numMealInputsCreated.value!! - 1
-                addNewMealInput(logCaloriesViewModel, newIndex)
+                addNewMealInput(logCaloriesViewModel, newIndex, 0)
                 if (logCaloriesViewModel.numMealInputs.value!! == 5)
                     binding.button.visibility = View.GONE
+            } else {
+                binding.button.visibility = View.GONE
             }
         }
         return root
     }
 
     // - - - - - - - - - - Helper Functions - - - - - - - - - -
-    private fun addFirstMealInput(logCaloriesViewModel: LogCaloriesViewModel) {
+    private fun addFirstMealInput(logCaloriesViewModel: LogCaloriesViewModel, calorieValue: Int) {
         // generates first meal input element (without delete button), adds to layout
         val mealInputsContainer = binding.linearLayout
         val newInputView: View = layoutInflater.inflate(R.layout.meal_input_1, null)
         val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
         newInput.id = 0
+        if (calorieValue != 0) newInput.setText(calorieValue.toString())
         newInput.doAfterTextChanged { handleChangeText(newInput, logCaloriesViewModel, 0) }
         mealInputsContainer.addView(newInputView)
     }
-    private fun addNewMealInput(logCaloriesViewModel: LogCaloriesViewModel, index: Int) {
+    private fun addNewMealInput(logCaloriesViewModel: LogCaloriesViewModel, index: Int, calorieValue: Int) {
         // generates new meal input element, adds it to layout
         val mealInputsContainer = binding.linearLayout
         val newInputView: View = layoutInflater.inflate(R.layout.meal_input, null)
         val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
         val deleteButton: Button = newInputView.findViewById(R.id.deleteButton)
         newInput.id = index
+        if (calorieValue != 0) newInput.setText(calorieValue.toString())
         newInput.doAfterTextChanged { handleChangeText(newInput, logCaloriesViewModel, index) }
         deleteButton.setOnClickListener {  // delete button
             if (index!=0) {

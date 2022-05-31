@@ -1,5 +1,6 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
