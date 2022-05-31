@@ -42,10 +42,6 @@ class LogCaloriesFragment : Fragment() {
         if (numMealInputsInt==0) {  // to draw initial meal input
             logCaloriesViewModel.addMealInputViewModel()
         }
-        Log.d("savedValues numMealInput", logCaloriesViewModel.numMealInputs.value.toString())
-        Log.d("savedValues numMealInputCreated", logCaloriesViewModel.numMealInputsCreated.value.toString())
-        Log.d("savedValues calCount", logCaloriesViewModel.calCount.value.toString())
-        Log.d("savedValues calorieArray", logCaloriesViewModel.calorieArray.value.toString())
         logCaloriesViewModel.calorieArray.value?.forEachIndexed { index, calorieValue ->
             if (calorieValue != -1) {
                 if (index == 0) addFirstMealInput(logCaloriesViewModel, calorieValue)
@@ -107,6 +103,12 @@ class LogCaloriesFragment : Fragment() {
             amount = Integer.parseInt(strAmount)
         logCaloriesViewModel.setCalorieI(index, amount)
         logCaloriesViewModel.calculateTotal()
+    }
+    private fun logValues(logCaloriesViewModel: LogCaloriesViewModel) {
+        Log.d("savedValues numMealInput", logCaloriesViewModel.numMealInputs.value.toString())
+        Log.d("savedValues numMealInputCreated", logCaloriesViewModel.numMealInputsCreated.value.toString())
+        Log.d("savedValues calCount", logCaloriesViewModel.calCount.value.toString())
+        Log.d("savedValues calorieArray", logCaloriesViewModel.calorieArray.value.toString())
     }
     override fun onDestroyView() {
         super.onDestroyView()

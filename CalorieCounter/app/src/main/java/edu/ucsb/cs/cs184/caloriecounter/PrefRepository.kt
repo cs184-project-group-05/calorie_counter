@@ -29,6 +29,7 @@ class PrefRepository(val context: Context) {
     private fun String.put(array: MutableList<Int>?) {
         // store array as a string
         editor.putString(this, array.toString())
+        editor.commit()
     }
 
     private fun String.getInt() = pref.getInt(this, 0) // default value returned is 0 if key is not found
@@ -42,19 +43,15 @@ class PrefRepository(val context: Context) {
     }
 
     private fun stringToArray(arrStr: String?): MutableList<Int>? {
-        if (arrStr != null) {
-            Log.d("calorieArray arrStr", arrStr)
-        }
         val array = mutableListOf<Int>()
         if (arrStr == null) return array
-        val commaSeparatedList = arrStr.substring(1,arrStr.length-1)
-        Log.d("calorieArray commaSeparatedList", commaSeparatedList)
-        val arrayOfStrings: List<String> = commaSeparatedList.split(", ").toList()
-        Log.d("calorieArray arrayOfStrings", arrayOfStrings.toString())
-        for (e in arrayOfStrings) {
-            array.add(e.toInt())
+        if (arrStr.length >= 3) {
+            val commaSeparatedList = arrStr.substring(1,arrStr.length-1)
+            val arrayOfStrings: List<String> = commaSeparatedList.split(", ").toList()
+            for (e in arrayOfStrings) {
+                array.add(e.toInt())
+            }
         }
-        Log.d("calorieArray array", array.toString())
         return array
     }
 

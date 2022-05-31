@@ -58,10 +58,6 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         _numMealInputsCreated.value = newNumInputsCreated
         _calorieArray.value = newCalorieArray
         with(prefRepository) {
-            newCalorieArray?.add(0)
-            _numMealInputs.value = newNumInputs
-            _numMealInputsCreated.value = newNumInputsCreated
-            _calorieArray.value = newCalorieArray
             setNumMealInputs(newNumInputs)
             setNumMealInputsCreated(newNumInputsCreated)
             setCalorieArray(newCalorieArray)
