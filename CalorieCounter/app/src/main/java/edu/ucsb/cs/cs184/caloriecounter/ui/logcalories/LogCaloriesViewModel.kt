@@ -53,19 +53,24 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         val newNumInputs = _numMealInputs.value?.plus(1)
         val newNumInputsCreated = _numMealInputsCreated.value?.plus(1)
         val newCalorieArray = _calorieArray.value
-        newCalorieArray?.plusAssign(0)
+        newCalorieArray?.add(0)
         _numMealInputs.value = newNumInputs
         _numMealInputsCreated.value = newNumInputsCreated
         _calorieArray.value = newCalorieArray
-        prefRepository.setNumMealInputs(newNumInputs)
-        prefRepository.setNumMealInputsCreated(newNumInputsCreated)
-        prefRepository.setCalorieArray(newCalorieArray)
+        with(prefRepository) {
+            newCalorieArray?.add(0)
+            _numMealInputs.value = newNumInputs
+            _numMealInputsCreated.value = newNumInputsCreated
+            _calorieArray.value = newCalorieArray
+            setNumMealInputs(newNumInputs)
+            setNumMealInputsCreated(newNumInputsCreated)
+            setCalorieArray(newCalorieArray)
+        }
     }
     fun deleteMealInputViewModel(index: Int) {  // decrements meal input count
         val newNumInputs = _numMealInputs.value?.minus(1)
         val newCalorieArray = _calorieArray.value
         newCalorieArray?.set(index,-1)  // -1 denotes deleted input
-        Log.d("savedValues newCalorieArray", newCalorieArray.toString())
         _numMealInputs.value = newNumInputs
         _calorieArray.value = newCalorieArray
         prefRepository.setNumMealInputs(newNumInputs)

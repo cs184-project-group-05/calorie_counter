@@ -27,13 +27,8 @@ class PrefRepository(val context: Context) {
     }
 
     private fun String.put(array: MutableList<Int>?) {
-        var arrayStr = mutableListOf<String>()
-        if (array != null) {
-            for (e in array) {
-                arrayStr.add(e.toString())
-            }
-        }
-        editor.putStringSet(this, arrayStr.toSet())
+        // store array as a string
+        editor.putString(this, array.toString())
     }
 
     private fun String.getInt() = pref.getInt(this, 0) // default value returned is 0 if key is not found
@@ -41,16 +36,26 @@ class PrefRepository(val context: Context) {
     private fun String.getString() = pref.getString(this, null) // default value returned is null if key is not found
 
     private fun String.getArray(): MutableList<Int>? {
-        val arrStr: MutableSet<String>? = pref.getStringSet(this, setOf<String>())
-        return arrStr?.toMutableList()?.toIntArray()
+        // get array stored as string -> integer array
+        val arrayAsString = pref.getString(this, null)
+        return stringToArray(arrayAsString)
     }
 
-    private fun MutableList<String>.toIntArray(): MutableList<Int> {
-        var arrayInt = mutableListOf<Int>()
-        for (e in this) {
-            arrayInt.add(e.toInt())
+    private fun stringToArray(arrStr: String?): MutableList<Int>? {
+        if (arrStr != null) {
+            Log.d("calorieArray arrStr", arrStr)
         }
-        return arrayInt
+        val array = mutableListOf<Int>()
+        if (arrStr == null) return array
+        val commaSeparatedList = arrStr.substring(1,arrStr.length-1)
+        Log.d("calorieArray commaSeparatedList", commaSeparatedList)
+        val arrayOfStrings: List<String> = commaSeparatedList.split(", ").toList()
+        Log.d("calorieArray arrayOfStrings", arrayOfStrings.toString())
+        for (e in arrayOfStrings) {
+            array.add(e.toInt())
+        }
+        Log.d("calorieArray array", array.toString())
+        return array
     }
 
     fun setName(name: String) {
