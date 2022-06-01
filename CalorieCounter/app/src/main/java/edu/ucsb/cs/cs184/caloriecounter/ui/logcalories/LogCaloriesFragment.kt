@@ -35,9 +35,22 @@ class LogCaloriesFragment : Fragment() {
             calGoal1 = getString(R.string.calGoal1_over)
         binding.textCalGoal.text = "$calGoal1 $calGoalValue ${getString(R.string.calGoal2)}"
 
-        // - - - - - - - - - - Daily Total Text - - - - - - - - - -
+        // - - - - - - - - Make UI changes according to Calorie Count  - - - - - - - - -
         logCaloriesViewModel.calCount.observe(viewLifecycleOwner) {
-            binding.textDailyCal.text = "${getString(R.string.dailyTotal1)} $it ${getString(R.string.dailyTotal2)}"
+            // daily calorie count total text
+            binding.numCalDaily.text = "$it"
+
+            // indicate in UI when calorie goal is met
+            var goalMet = logCaloriesViewModel.calGoal.value!! >= it!!
+            if (logCaloriesViewModel.goalLoseWeight.value == 0) goalMet = !goalMet
+            if (goalMet) {
+                binding.numCalDaily.setTextColor(resources.getColor(R.color.green))
+            } else {
+                binding.numCalDaily.setTextColor(resources.getColor(R.color.red))
+            }
+            if (it == 0) {
+                binding.numCalDaily.setTextColor(resources.getColor(androidx.appcompat.R.color.material_grey_600))
+            }
         }
 
         // - - - - - - - - - - Draw Meal Inputs from Saved State - - - - - - - - - -
