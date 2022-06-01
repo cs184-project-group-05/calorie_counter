@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,6 +26,7 @@ class HomeFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
+    private lateinit var homeViewModel : HomeViewModel
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -32,52 +34,29 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        // - - - - - - - - - - Check if User exists in database - - - - - - - - - - -
+
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        homeViewModel.getCurUserMutableLiveData().observe(viewLifecycleOwner, Observer {
+            homeViewModel.updateModel(it)
+            updateUI()
+        })
         // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
         homeViewModel.updateDate()
 
-        // - - - - - - - - - - home page title text - - - - - - - - - -
-        val title: TextView = binding.textHome
-        title.text = homeViewModel.getWelcomeMessage()
-
-        // - - - - - - - - - - name text input field - - - - - - - - - -
-        val nameInputView = binding.textInputLayout8
-        nameInputView.editText?.setText(homeViewModel.name.value)
-
-        // - - - - - - - - - - age text input field - - - - - - - - - -
-        val ageInputView = binding.ageInput
-        ageInputView.editText?.setText(homeViewModel.age.value)
-
-        // - - - - - - - - - - weight text input field - - - - - - - - - -
-        val weightInputView = binding.weightInput
-        weightInputView.editText?.setText(homeViewModel.weight.value)
-
-        // - - - - - - - - - - height text input field - - - - - - - - - -
-        val heightInputView = binding.heightInput
-        heightInputView.editText?.setText(homeViewModel.height.value)
-
-        // - - - - - - - - - - gender selection dropdown menu input field - - - - - - - - - -
-        val genderDropdown = binding.genderDropdown
-        genderDropdown.editText?.setText(homeViewModel.gender.value)
-        val genders = arrayOf("Male", "Female")
-        (genderDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(genders)
-
-        // - - - - - - - - - - goal selection dropdown menu input field - - - - - - - - - -
-        val goalDropdown = binding.goalDropdown
-        goalDropdown.editText?.setText(homeViewModel.goal.value)
-        val goals = arrayOf("Bulk Up", "Lose Weight")
-        (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
-
-        // - - - - - - - - - - streak view - - - - - - - - - -
-        val streakView: TextView = binding.streakText
-        streakView.text = homeViewModel.getStreakText()
-
         // - - - - - - - - - - fab - - - - - - - - - -
+        val title: TextView = binding.textHome
+        val nameInputView = binding.textInputLayout8
+        val ageInputView = binding.ageInput
+        val weightInputView = binding.weightInput
+        val heightInputView = binding.heightInput
+        val genderDropdown = binding.genderDropdown
+        val goalDropdown = binding.goalDropdown
+
         val fab = binding.extendedFab
         fab.setOnClickListener {
             // set name
@@ -117,7 +96,43 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    fun updateUI(){
+        // - - - - - - - - - - home page title text - - - - - - - - - -
+        val title: TextView = binding.textHome
+        title.text = homeViewModel.getWelcomeMessage()
 
+        // - - - - - - - - - - name text input field - - - - - - - - - -
+        val nameInputView = binding.textInputLayout8
+        nameInputView.editText?.setText(homeViewModel.name.value)
+
+        // - - - - - - - - - - age text input field - - - - - - - - - -
+        val ageInputView = binding.ageInput
+        ageInputView.editText?.setText(homeViewModel.age.value)
+
+        // - - - - - - - - - - weight text input field - - - - - - - - - -
+        val weightInputView = binding.weightInput
+        weightInputView.editText?.setText(homeViewModel.weight.value)
+
+        // - - - - - - - - - - height text input field - - - - - - - - - -
+        val heightInputView = binding.heightInput
+        heightInputView.editText?.setText(homeViewModel.height.value)
+
+        // - - - - - - - - - - gender selection dropdown menu input field - - - - - - - - - -
+        val genderDropdown = binding.genderDropdown
+        genderDropdown.editText?.setText(homeViewModel.gender.value)
+        val genders = arrayOf("Male", "Female")
+        (genderDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(genders)
+
+        // - - - - - - - - - - goal selection dropdown menu input field - - - - - - - - - -
+        val goalDropdown = binding.goalDropdown
+        goalDropdown.editText?.setText(homeViewModel.goal.value)
+        val goals = arrayOf("Bulk Up", "Lose Weight")
+        (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
+
+        // - - - - - - - - - - streak view - - - - - - - - - -
+        val streakView: TextView = binding.streakText
+        streakView.text = homeViewModel.getStreakText()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

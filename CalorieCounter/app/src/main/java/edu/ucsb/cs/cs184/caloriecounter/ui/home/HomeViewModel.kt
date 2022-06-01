@@ -4,61 +4,78 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import edu.ucsb.cs.cs184.caloriecounter.AppRepository
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 import java.text.SimpleDateFormat
 import java.util.*
+import edu.ucsb.cs.cs184.caloriecounter.data.DataInterface
+import edu.ucsb.cs.cs184.caloriecounter.data.User
 
 class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     // - - - - - - - - - - member variables - - - - - - - - - -
 
     // by lazy = one time initialization: we only want one local database to be created ever
-    private val prefRepository by lazy { PrefRepository(application) }
+
+    private val prefRepository = PrefRepository(application)
+    private val appRepository = AppRepository(application)
+    private var curUserMutableLiveData : MutableLiveData<User> = appRepository.getCurUserMutableLiveData()
+
 
     private val _name = MutableLiveData<String>().apply {
-        value = prefRepository.getName()
+        //value = appRepository.getName()
     }
     val name: MutableLiveData<String> = _name
 
     private val _age = MutableLiveData<String>().apply {
-        value = prefRepository.getAge()
+        //value = prefRepository.getAge()
     }
     val age: MutableLiveData<String> = _age
 
     private val _weight = MutableLiveData<String>().apply {
-        value = prefRepository.getWeight()
+        //value = prefRepository.getWeight()
     }
     val weight: MutableLiveData<String> = _weight
 
     private val _height = MutableLiveData<String>().apply {
-        value = prefRepository.getHeight()
+        //value = prefRepository.getHeight()
     }
     val height: MutableLiveData<String> = _height
 
     private val _gender = MutableLiveData<String>().apply {
-        value = prefRepository.getGender()
+        //value = prefRepository.getGender()
     }
     val gender: MutableLiveData<String> = _gender
 
     private val _goal = MutableLiveData<String>().apply {
-        value = prefRepository.getGoal()
+        //value = prefRepository.getGoal()
     }
     val goal: MutableLiveData<String> = _goal
 
     private val _streak = MutableLiveData<Int>().apply {
-        value = prefRepository.getStreak()
+        //value = prefRepository.getStreak()
     }
     val streak: MutableLiveData<Int> = _streak
 
     private val _lastLogin = MutableLiveData<String>().apply{
-        value = prefRepository.getLastLogin()
+        //value = prefRepository.getLastLogin()
     }
     val lastLogin: MutableLiveData<String> = _lastLogin
+
+    private val _calGoal = MutableLiveData<Int>().apply{
+        value = prefRepository.getCalorieGoal()
+    }
+    val calGoal: MutableLiveData<Int> = _calGoal
+
+    private val _calCount = MutableLiveData<Int>().apply{
+        value = 0
+    }
+    val calCount: MutableLiveData<Int> = _calCount
 
     // - - - - - - - - - - getters - - - - - - - - - -
 
     fun getWelcomeMessage(): String {
-        if (this.name.value == null) {
+        if (this.name.value == null || this.name.value == "") {
             return "Welcome! Please enter your information to get started."
         }
         return "Hello, " + this.name.value
@@ -84,10 +101,14 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun getCurUserMutableLiveData() : MutableLiveData<User>{
+        return curUserMutableLiveData
+    }
     // - - - - - - - - - - setters - - - - - - - - - -
 
     fun setName(name: String): String {
-        prefRepository.setName(name)
+        appRepository.setName(name)
+        //prefRepository.setName(name)
         this.name.value = name
         return name
     }
@@ -96,7 +117,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // returns null if the age is invalid, otherwise return the input
         // calls to setAge should check for null return value and handle appropriately
         if (this.isWholeNumber(age)) {
-            prefRepository.setAge(age)
+            appRepository.setAge(age)
             this.age.value = age
             return age
         }
@@ -109,7 +130,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // returns null if the weight is invalid, otherwise return the weight
         // calls to setWeight should check for null return value and handle appropriately
         if (this.isNumber(weight)) {
-            prefRepository.setWeight(weight)
+            appRepository.setWeight(weight)
             this.weight.value = weight
             return weight
         }
@@ -122,7 +143,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // returns null if the height is invalid, otherwise return the height
         // calls to setHeight should check for null return value and handle appropriately
         if (this.isNumber(height)) {
-            prefRepository.setHeight(height)
+            appRepository.setHeight(height)
             this.height.value = height
             return height
         }
@@ -132,35 +153,49 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun setGender(gender: String): String {
-        prefRepository.setGender(gender)
+        appRepository.setGender(gender)
         this.gender.value = gender
         return gender
     }
 
     fun setGoal(goal: String): String {
-        prefRepository.setGoal(goal)
+        appRepository.setGoal(goal)
         this.goal.value = goal
         return goal
     }
 
     fun setCalGoal(calGoal: Int): Int{
-        prefRepository.setCalorieGoal(calGoal)
+        appRepository.setCalorieGoal(calGoal)
         return calGoal
     }
 
     fun setStreak(streak: Int): Int{
-        prefRepository.setStreak(streak)
+        appRepository.setStreak(streak)
         this.streak.value = streak
         return streak
     }
 
     fun setLastLogin(lastLogin: String): String{
-        prefRepository.setLastLogin(lastLogin)
+        appRepository.setLastLogin(lastLogin)
         this.lastLogin.value = lastLogin
         return lastLogin
     }
 
     // - - - - - - - - - - public functions - - - - - - - - - -
+
+    //updates all data in the ViewModel once data has loaded.
+    fun updateModel(user: User){
+        name.value = user.name ?: ""
+        age.value = user.age ?: ""
+        weight.value = user.weight ?: ""
+        height.value = user.height ?: ""
+        gender.value = user.gender ?: ""
+        goal.value = user.goal ?: ""
+        streak.value = user.streak ?: 1
+        lastLogin.value = user.last_login ?: ""
+        calCount.value = user.calorie_count ?: 0
+        calGoal.value = user.calorie_goal ?: 0
+    }
 
     //function that calculates target daily goal given user input.
     fun calcGoal() : Int{
@@ -226,7 +261,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             return
         }
 
-        if(lastLogin == prevDate && prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount()){
+        if(lastLogin == prevDate && calCount.value!! >= calGoal.value!!){
             //only achieved when calorie count is under calorie goal
             this.setStreak(this.streak.value!! + 1)
         }else{
