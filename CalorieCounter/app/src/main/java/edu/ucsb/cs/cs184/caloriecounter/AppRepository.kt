@@ -21,11 +21,12 @@ class AppRepository (application: Application){
     private var database: FirebaseDatabase = Firebase.database
     private var userRef = database.getReference("users")
     private var curUserMutableLiveData : MutableLiveData<User> = MutableLiveData()
-    private var curUID = firebaseAuth.currentUser!!.uid
+    private var curUID = firebaseAuth.currentUser?.uid ?: "" //Jank solution for circumventing null uid
     private lateinit var userData: User
 
     init{ //attach a listener upon creation so that it updates whenever data is updated.
         val userListener = object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var results : HashMap<String, Any>? = dataSnapshot.value as? HashMap<String, Any>
                 userData = User(

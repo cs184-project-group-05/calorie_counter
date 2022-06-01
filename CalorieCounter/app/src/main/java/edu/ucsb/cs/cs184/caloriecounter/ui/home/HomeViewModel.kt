@@ -3,12 +3,10 @@ package edu.ucsb.cs.cs184.caloriecounter.ui.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import edu.ucsb.cs.cs184.caloriecounter.AppRepository
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 import java.text.SimpleDateFormat
 import java.util.*
-import edu.ucsb.cs.cs184.caloriecounter.data.DataInterface
 import edu.ucsb.cs.cs184.caloriecounter.data.User
 
 class HomeViewModel(application: Application): AndroidViewModel(application) {
@@ -22,54 +20,34 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     private var curUserMutableLiveData : MutableLiveData<User> = appRepository.getCurUserMutableLiveData()
 
 
-    private val _name = MutableLiveData<String>().apply {
-        //value = appRepository.getName()
-    }
+    private val _name = MutableLiveData<String>()
     val name: MutableLiveData<String> = _name
 
-    private val _age = MutableLiveData<String>().apply {
-        //value = prefRepository.getAge()
-    }
+    private val _age = MutableLiveData<String>()
     val age: MutableLiveData<String> = _age
 
-    private val _weight = MutableLiveData<String>().apply {
-        //value = prefRepository.getWeight()
-    }
+    private val _weight = MutableLiveData<String>()
     val weight: MutableLiveData<String> = _weight
 
-    private val _height = MutableLiveData<String>().apply {
-        //value = prefRepository.getHeight()
-    }
+    private val _height = MutableLiveData<String>()
     val height: MutableLiveData<String> = _height
 
-    private val _gender = MutableLiveData<String>().apply {
-        //value = prefRepository.getGender()
-    }
+    private val _gender = MutableLiveData<String>()
     val gender: MutableLiveData<String> = _gender
 
-    private val _goal = MutableLiveData<String>().apply {
-        //value = prefRepository.getGoal()
-    }
+    private val _goal = MutableLiveData<String>()
     val goal: MutableLiveData<String> = _goal
 
-    private val _streak = MutableLiveData<Int>().apply {
-        //value = prefRepository.getStreak()
-    }
+    private val _streak = MutableLiveData<Int>()
     val streak: MutableLiveData<Int> = _streak
 
-    private val _lastLogin = MutableLiveData<String>().apply{
-        //value = prefRepository.getLastLogin()
-    }
+    private val _lastLogin = MutableLiveData<String>()
     val lastLogin: MutableLiveData<String> = _lastLogin
 
-    private val _calGoal = MutableLiveData<Int>().apply{
-        value = prefRepository.getCalorieGoal()
-    }
+    private val _calGoal = MutableLiveData<Int>()
     val calGoal: MutableLiveData<Int> = _calGoal
 
-    private val _calCount = MutableLiveData<Int>().apply{
-        value = 0
-    }
+    private val _calCount = MutableLiveData<Int>()
     val calCount: MutableLiveData<Int> = _calCount
 
     // - - - - - - - - - - getters - - - - - - - - - -
@@ -108,7 +86,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     fun setName(name: String): String {
         appRepository.setName(name)
-        //prefRepository.setName(name)
         this.name.value = name
         return name
     }
