@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00FF00</color>
     <color name="red">#FF0000</color>
+    <color name="accent_main">#D15876</color>
+    <color name="grey">#fafafa</color>
 </resources>
