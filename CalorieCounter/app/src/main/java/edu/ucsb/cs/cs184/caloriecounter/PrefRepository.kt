@@ -2,6 +2,7 @@ package edu.ucsb.cs.cs184.caloriecounter
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 class PrefRepository(val context: Context) {
 
@@ -13,8 +14,10 @@ class PrefRepository(val context: Context) {
 
     private val editor = pref.edit()
 
-    private fun String.put(int: Int) {
-        editor.putInt(this, int)
+    private fun String.put(int: Int?) {
+        if (int != null) {
+            editor.putInt(this, int)
+        }
         editor.commit()
     }
 
@@ -23,9 +26,34 @@ class PrefRepository(val context: Context) {
         editor.commit()
     }
 
+    private fun String.put(array: MutableList<Int>?) {
+        // store array as a string
+        editor.putString(this, array.toString())
+        editor.commit()
+    }
+
     private fun String.getInt() = pref.getInt(this, 0) // default value returned is 0 if key is not found
 
     private fun String.getString() = pref.getString(this, null) // default value returned is null if key is not found
+
+    private fun String.getArray(): MutableList<Int>? {
+        // get array stored as string -> integer array
+        val arrayAsString = pref.getString(this, null)
+        return stringToArray(arrayAsString)
+    }
+
+    private fun stringToArray(arrStr: String?): MutableList<Int>? {
+        val array = mutableListOf<Int>()
+        if (arrStr == null) return array
+        if (arrStr.length >= 3) {
+            val commaSeparatedList = arrStr.substring(1,arrStr.length-1)
+            val arrayOfStrings: List<String> = commaSeparatedList.split(", ").toList()
+            for (e in arrayOfStrings) {
+                array.add(e.toInt())
+            }
+        }
+        return array
+    }
 
     fun setName(name: String) {
         "name".put(name)
@@ -47,21 +75,24 @@ class PrefRepository(val context: Context) {
         "gender".put(gender)
     }
 
-    fun setGoal(goal: String) {
-        "goal".put(goal)
+    fun setGoalLoseWeight(goalLoseWeight: Int) {
+        "goal_lose_weight".put(goalLoseWeight)  // 0 for false, 1 for true
     }
 
     fun setStreak(streak: Int) {
         "streak".put(streak)
     }
 
-    fun setCalorieCount(count: Int){
-        "calorie_count".put(count)
+    fun setGoalMet(goalMet: Int) {
+        "goal_met".put(goalMet)
     }
 
-    fun setCalorieGoal(goal: Int){
-        "calorie_goal".put(goal)
-    }
+    // Log Calories Page Data
+    fun setCalorieCount(count: Int) = "calorie_count".put(count)
+    fun setCalorieGoal(goal: Int) = "calorie_goal".put(goal)
+    fun setNumMealInputs(num: Int?) = "num_meal_inputs".put(num)
+    fun setNumMealInputsCreated(num: Int?) = "num_meal_inputs_created".put(num)
+    fun setCalorieArray(array: MutableList<Int>?) = "calorie_array".put(array)
 
     fun setLastLogin(date: String){
         "last_login".put(date)
@@ -77,13 +108,19 @@ class PrefRepository(val context: Context) {
 
     fun getGender() = "gender".getString()
 
-    fun getGoal() = "goal".getString()
+    fun getGoalLoseWeight() = "goal_lose_weight".getInt()
 
     fun getStreak() = "streak".getInt()
 
-    fun getCalorieCount() = "calorie_count".getInt()
-
-    fun getCalorieGoal() = "calorie_goal".getInt()
-
     fun getLastLogin() = "last_login".getString()
+
+    // Log Calories Page Data
+    fun getCalorieCount() = "calorie_count".getInt()
+    fun getCalorieGoal() = "calorie_goal".getInt()
+    fun getNumMealInputs() = "num_meal_inputs".getInt()
+    fun getNumMealInputsCreated() = "num_meal_inputs_created".getInt()
+    fun getCalorieArray() = "calorie_array".getArray()
+
+    // Streak Data
+    fun getGoalMet() = "goal_met".getInt()
 }

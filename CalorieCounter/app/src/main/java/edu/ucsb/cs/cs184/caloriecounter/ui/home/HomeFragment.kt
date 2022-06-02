@@ -1,17 +1,18 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.home
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
-import java.text.SimpleDateFormat
-import java.util.Calendar
+
 
 class HomeFragment : Fragment() {
 
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
 
         // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
         homeViewModel.updateDate()
+        homeViewModel.updateStreak()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
@@ -63,8 +65,11 @@ class HomeFragment : Fragment() {
 
         // - - - - - - - - - - goal selection dropdown menu input field - - - - - - - - - -
         val goalDropdown = binding.goalDropdown
-        goalDropdown.editText?.setText(homeViewModel.goal.value)
-        val goals = arrayOf("Bulk Up", "Lose Weight")
+        val goals = arrayOf("Lose Weight", "Gain Weight")
+        if (homeViewModel.goalLoseWeight.value == 1)
+            goalDropdown.editText?.setText(goals[0])
+        else
+            goalDropdown.editText?.setText(goals[1])
         (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
 
         // - - - - - - - - - - streak view - - - - - - - - - -
@@ -90,14 +95,24 @@ class HomeFragment : Fragment() {
             homeViewModel.setGender(genderDropdown.editText?.text.toString())
 
             // set goal
-            homeViewModel.setGoal(goalDropdown.editText?.text.toString())
+            if (goalDropdown.editText?.text.toString() == goals[0])  // goals[0] == "lose weight"
+                homeViewModel.setGoalLoseWeight(1)  // lose weight == true
+            else
+                homeViewModel.setGoalLoseWeight(0)  // lose weight == false
 
             //set calorie goal
             homeViewModel.setCalGoal(homeViewModel.calcGoal())
 
-            // display appropriate snackbar text, also update the title text
+            // display appropriate snackbar text
             val snackbarText = homeViewModel.getSnackbarText(validInputAge, validInputWeight, validInputHeight)
-            Snackbar.make(fab, snackbarText, Snackbar.LENGTH_LONG).show()
+            val snack = Snackbar.make(fab, snackbarText, Snackbar.LENGTH_LONG)
+            val view: View = snack.view
+            val params = view.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP  // make snackbar show on top
+            view.layoutParams = params
+            snack.show()
+
+            // update the title text
             title.text = homeViewModel.getWelcomeMessage()
         }
 
