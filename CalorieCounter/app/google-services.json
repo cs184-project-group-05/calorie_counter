@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "840404989310",
-    "project_id": "ucsb-184-calorie-counter",
-    "storage_bucket": "ucsb-184-calorie-counter.appspot.com"
+    "project_number": "52207512946",
+    "project_id": "cs185-calorie",
+    "storage_bucket": "cs185-calorie.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:840404989310:android:27f2b74805029990aaef2f",
+        "mobilesdk_app_id": "1:52207512946:android:794519d4d047e9ac6141eb",
         "android_client_info": {
           "package_name": "edu.ucsb.cs.cs184.caloriecounter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "840404989310-7n35n9mba37jn7dv7901t6ssct87eci3.apps.googleusercontent.com",
+          "client_id": "52207512946-lhne26kr42scgdmjih4a88lrpcpse8rl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "edu.ucsb.cs.cs184.caloriecounter",
-            "certificate_hash": "12dbbf44a9b8369e96ca0d8ea5f74c35774f275e"
+            "certificate_hash": "a3fc649e91096cd4023ebdb1894a947b74018402"
           }
         },
         {
-          "client_id": "840404989310-2ktej766fs6j00g0s2a2b9st174b5kn7.apps.googleusercontent.com",
+          "client_id": "52207512946-97puvlagm27p0f99vgddk6aems6gkgg9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBOe1qoft8SS1X3mRarrCk409mHGTW1bWI"
+          "current_key": "AIzaSyABV7KiR1c4L4s-JhyiDM5JMeGYQWG3VT0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "840404989310-2ktej766fs6j00g0s2a2b9st174b5kn7.apps.googleusercontent.com",
+              "client_id": "52207512946-97puvlagm27p0f99vgddk6aems6gkgg9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

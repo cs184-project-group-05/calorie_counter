@@ -5,20 +5,18 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import edu.ucsb.cs.cs184.caloriecounter.AppRepository
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
+import edu.ucsb.cs.cs184.caloriecounter.data.User
 
 class LogCaloriesViewModel(application: Application) : AndroidViewModel(application) {
     // - - - - - - - - - - member variables - - - - - - - - - -
-    private val prefRepository by lazy { PrefRepository(application) }
-    private val _goalLoseWeight = MutableLiveData<Int>().apply {
-        value = prefRepository.getGoalLoseWeight()
-    }
-    private val _calGoal = MutableLiveData<Int>().apply{
-        value = prefRepository.getCalorieGoal()
-    }
-    private val _calCount = MutableLiveData<Int>().apply{
-        value = 0
-    }
+    private val appRepository = AppRepository(application)
+    private var curUserMutableLiveData : MutableLiveData<User> = appRepository.getCurUserMutableLiveData()
+
+    private val _goalLoseWeight = MutableLiveData<Int>()
+    private val _calGoal = MutableLiveData<Int>()
+    private val _calCount = MutableLiveData<Int>()
     private val _numMealInputs = MutableLiveData<Int>().apply {
         value = 0
     }
@@ -38,13 +36,14 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
 
     // - - - - - - - - - - public member functions - - - - - - - - - -
     // function updates values from database when called.
-    fun update() {
-        _calGoal.value = prefRepository.getCalorieGoal()
-        _calCount.value = prefRepository.getCalorieCount()
-        _numMealInputs.value = prefRepository.getNumMealInputs()
-        _numMealInputsCreated.value = prefRepository.getNumMealInputsCreated()
-        _calorieArray.value = prefRepository.getCalorieArray()
-        _goalLoseWeight.value = prefRepository.getGoalLoseWeight()
+    fun updateModel(user: User) {
+        _calGoal.value = user.calorie_goal ?: 0
+        _calCount.value = user.calorie_count ?: 0
+        _numMealInputs.value = user.num_meal_inputs ?: 0
+        _numMealInputsCreated.value = user.num_meal_inputs_created ?: 0
+        _calorieArray.value = user.calorie_array
+        _goalLoseWeight.value = user.goal_lose_weight ?: 0
+
     }
 
     // - - - - - - - - - - helper functions - - - - - - - - - -
@@ -52,8 +51,13 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         val newCalorieArray = _calorieArray.value
         newCalorieArray?.set(i,amount)
         _calorieArray.value = newCalorieArray
-        prefRepository.setCalorieArray(newCalorieArray)
+        appRepository.setCalorieArray(newCalorieArray)
     }
+
+    fun getCurUserMutableLiveData() : MutableLiveData<User>{
+        return curUserMutableLiveData
+    }
+
     fun addMealInputViewModel() {  // increases count of meal inputs & adds value to calorieArray
         val newNumInputs = _numMealInputs.value?.plus(1)
         val newNumInputsCreated = _numMealInputsCreated.value?.plus(1)
@@ -62,7 +66,7 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         _numMealInputs.value = newNumInputs
         _numMealInputsCreated.value = newNumInputsCreated
         _calorieArray.value = newCalorieArray
-        with(prefRepository) {
+        with(appRepository) {
             setNumMealInputs(newNumInputs)
             setNumMealInputsCreated(newNumInputsCreated)
             setCalorieArray(newCalorieArray)
@@ -74,8 +78,8 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
         newCalorieArray?.set(index,-1)  // -1 denotes deleted input
         _numMealInputs.value = newNumInputs
         _calorieArray.value = newCalorieArray
-        prefRepository.setNumMealInputs(newNumInputs)
-        prefRepository.setCalorieArray(newCalorieArray)
+        appRepository.setNumMealInputs(newNumInputs)
+        appRepository.setCalorieArray(newCalorieArray)
         calculateTotal()
     }
     fun calculateTotal() {  // calculates calorie total from calorieArray and sets totalCalories
@@ -84,6 +88,6 @@ class LogCaloriesViewModel(application: Application) : AndroidViewModel(applicat
             if (item != -1) total += item
         }
         _calCount.value = total
-        prefRepository.setCalorieCount(total)
+        appRepository.setCalorieCount(total)
     }
 }
