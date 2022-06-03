@@ -44,7 +44,7 @@ class AppRepository (application: Application){
 
                     num_meal_inputs = (results?.get("num_meal_inputs") as Long?)?.toInt() ?:0,
                     num_meal_inputs_created = (results?.get("num_meal_inputs_created") as Long?)?.toInt() ?:0,
-                    calorie_array = results?.get("calorie_array") as MutableList<Int>?,
+                    calorie_array = listLongToInt(results?.get("calorie_array") as MutableList<Long>?),
 
                     streak = (results?.get("streak") as Long?)?.toInt() ?: 0,
                     last_login = results?.get("last_login") as String?
@@ -57,6 +57,17 @@ class AppRepository (application: Application){
         }
         //attach listener that updates the current user's data
         userRef.child(curUID).addValueEventListener(userListener)
+    }
+
+    // - - - - - - - - - - - Helper Functions - - - - - - - - - - - - >
+    private fun listLongToInt(list : MutableList<Long>?) : MutableList<Int>{
+        val result = mutableListOf<Int>()
+        if(list != null){
+            for (longVal in list){
+                result.add(longVal.toInt())
+            }
+        }
+        return result
     }
 
     fun setUser(user: User){

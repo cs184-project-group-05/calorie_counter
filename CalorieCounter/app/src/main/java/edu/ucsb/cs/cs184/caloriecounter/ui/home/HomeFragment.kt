@@ -41,14 +41,18 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        var isFirstUpdate = true
 
         homeViewModel.getCurUserMutableLiveData().observe(viewLifecycleOwner, Observer {
             homeViewModel.updateModel(it)
+            if (isFirstUpdate){
+                // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
+                homeViewModel.updateDate()
+                homeViewModel.updateStreak()
+                isFirstUpdate = false
+            }
             updateUI()
         })
-        // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
-        homeViewModel.updateDate()
-        homeViewModel.updateStreak()
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
