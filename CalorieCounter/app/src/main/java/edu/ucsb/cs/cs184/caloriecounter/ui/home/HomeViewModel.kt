@@ -1,9 +1,9 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,10 +40,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
     val gender: MutableLiveData<String> = _gender
 
-    private val _goal = MutableLiveData<String>().apply {
-        value = prefRepository.getGoal()
+    private val _goalLoseWeight = MutableLiveData<Int>().apply {
+        value = prefRepository.getGoalLoseWeight()
     }
-    val goal: MutableLiveData<String> = _goal
+    val goalLoseWeight: MutableLiveData<Int> = _goalLoseWeight
 
     private val _streak = MutableLiveData<Int>().apply {
         value = prefRepository.getStreak()
@@ -54,6 +54,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         value = prefRepository.getLastLogin()
     }
     val lastLogin: MutableLiveData<String> = _lastLogin
+
+    // data locking boolean flags
+    private val _canIncreaseStreak = MutableLiveData<Boolean>().apply { value = false }
+    private val _canDecreaseStreak = MutableLiveData<Boolean>().apply { value = false }
+    private val _canSetNewGoalMet = MutableLiveData<Boolean>().apply { value = false }
 
     // - - - - - - - - - - getters - - - - - - - - - -
 
@@ -137,9 +142,9 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return gender
     }
 
-    fun setGoal(goal: String): String {
-        prefRepository.setGoal(goal)
-        this.goal.value = goal
+    fun setGoalLoseWeight(goal: Int): Int {
+        prefRepository.setGoalLoseWeight(goal)
+        this.goalLoseWeight.value = goal
         return goal
     }
 
@@ -184,26 +189,40 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return calGoal.toInt()
     }
 
-    //function that updates the streak of the user.
-    //checks to see if a day has passed by looking at last and current login time.
-    //TODO:Update streak so that it only increments if user has met their calorie goal the previous day.
-    fun updateStreak(){
-        if(this.streak.value!! <= 0){
-            this.setStreak(1)
-        }
+    /*function that checks if the current date is different from the user's previous login
+    and updates various features based on date changes. This includes Streak and Meal Logs.
+    */
+    fun updateDate(){
         val lastLogin = this.lastLogin.value ?: ""
         val sdf = SimpleDateFormat("dd-MM-yyyy")
         val c : Calendar = Calendar.getInstance()
         val curDate = sdf.format(c.time)
-        c.add(Calendar.DATE, -1)
-        val prevDate = sdf.format(c.time)
-        if(lastLogin == prevDate){
-            this.setStreak(this.streak.value!! + 1)
-        }else if(lastLogin != curDate){
-            this.setStreak(1)
+
+        if (lastLogin != curDate){
+            c.add(Calendar.DATE, -1)
+
+            // if goal not met on previous day, set streak to 0
+            val goalMet = prefRepository.getGoalMet()
+            if (goalMet == 0) {
+                this.setStreak(0)
+            }
+
+            // unlock data changes
+            _canDecreaseStreak.value = false
+            _canIncreaseStreak.value = true
+            _canSetNewGoalMet.value = true
+
+            c.add(Calendar.DATE, 1) // reset calendar back to original position
+
+            // reset calorie UI data
+            prefRepository.setCalorieCount(0)
+            prefRepository.setNumMealInputs(0)
+            prefRepository.setNumMealInputsCreated(0)
+            prefRepository.setCalorieArray(mutableListOf<Int>())
+            prefRepository.setGoalMet(0)  // set to 1 when goal is met
         }
-        this.setLastLogin(curDate)
-        return
+
+        this.setLastLogin(curDate) //change last login to the current date.
     }
 
     // - - - - - - - - - - private helper functions - - - - - - - - - -
@@ -220,5 +239,31 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return s.all {char -> char.isDigit() || char == '.'}
     }
 
+    // function that updates the streak of the user.
+    fun updateStreak() {
+        if (_canSetNewGoalMet.value == false) return
+        if (this.streak.value == null || this.streak.value!! < 0) this.setStreak(0)
 
+        var goalMet = prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount()
+        if (prefRepository.getGoalLoseWeight() == 0) goalMet = !goalMet
+
+        if (goalMet && prefRepository.getCalorieCount() >= 1) {
+            // only allow for one streak increase per day
+            if (_canIncreaseStreak.value == true) {
+                this.setStreak(this.streak.value!! + 1)
+                _canIncreaseStreak.value = false
+                _canDecreaseStreak.value = true  // can decrease, since already increased
+            }
+            prefRepository.setGoalMet(1)
+        }
+        else {
+            // only allow for one streak decrease after a streak increase
+            if (_canDecreaseStreak.value == true) {
+                this.setStreak(this.streak.value!! - 1)
+                _canDecreaseStreak.value = false
+                _canIncreaseStreak.value = true
+            }
+            prefRepository.setGoalMet(0)
+        }
+    }
 }
