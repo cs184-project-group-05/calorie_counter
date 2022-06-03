@@ -6,9 +6,18 @@ data class User(
     var weight: String? = null,
     var height: String? = null,
     var gender: String? = null,
-    var goal: String? = null,
-    var streak: Int? = 1,
+
+    //- - - - - -  calorie related - - - - - - >
+    var goal_lose_weight: Int? = 0,
+    var goal_met: Int? = 0,
+
     var calorie_count: Int? = 0,
     var calorie_goal: Int? = 0,
+
+    var num_meal_inputs: Int? = 0,
+    var num_meal_inputs_created: Int? = 0,
+    var calorie_array: MutableList<Int>? = null,
+    // - - - - - - - date related - - - - - - - >
+    var streak: Int? = 0,
     var last_login: String? = null
 )

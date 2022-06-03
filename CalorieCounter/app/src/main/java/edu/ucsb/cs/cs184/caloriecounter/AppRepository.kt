@@ -35,10 +35,18 @@ class AppRepository (application: Application){
                     weight = results?.get("weight") as String?,
                     height = results?.get("height") as String?,
                     gender = results?.get("gender") as String?,
-                    goal = results?.get("goal") as String?,
-                    streak = (results?.get("streak") as Long?)?.toInt() ?: 0,
+
+                    goal_lose_weight = (results?.get("goal_lose_weight") as Long?)?.toInt() ?: 0,
+                    goal_met = (results?.get("goal_met") as Long?)?.toInt() ?: 0,
+
                     calorie_count = (results?.get("calorie_count") as Long?)?.toInt() ?: 0,
                     calorie_goal = (results?.get("calorie_goal") as Long?)?.toInt() ?:0,
+
+                    num_meal_inputs = (results?.get("num_meal_inputs") as Long?)?.toInt() ?:0,
+                    num_meal_inputs_created = (results?.get("num_meal_inputs_created") as Long?)?.toInt() ?:0,
+                    calorie_array = results?.get("calorie_array") as MutableList<Int>?,
+
+                    streak = (results?.get("streak") as Long?)?.toInt() ?: 0,
                     last_login = results?.get("last_login") as String?
                 )
                 curUserMutableLiveData.postValue(userData)
@@ -74,12 +82,25 @@ class AppRepository (application: Application){
         userRef.child(curUID).child("gender").setValue(gender)
     }
 
-    fun setGoal(goal: String) {
-        userRef.child(curUID).child("goal").setValue(goal)
+    // - - - - - - - - Calorie Related - - - - - - - - - - ->
+    fun setGoalLostWeight(goal: Int) {
+        userRef.child(curUID).child("goal_lose_weight").setValue(goal)
     }
 
-    fun setStreak(streak: Int) {
-        userRef.child(curUID).child("streak").setValue(streak)
+    fun setGoalMet(goal: Int) {
+        userRef.child(curUID).child("goal_met").setValue(goal)
+    }
+
+    fun setNumMealInputs(num: Int?) {
+        userRef.child(curUID).child("num_meal_inputs").setValue(num)
+    }
+
+    fun setNumMealInputsCreated(num: Int?){
+        userRef.child(curUID).child("num_meal_inputs_created").setValue(num)
+    }
+
+    fun setCalorieArray(array: MutableList<Int>?){
+        userRef.child(curUID).child("calorie_array").setValue(array)
     }
 
     fun setCalorieCount(count: Int){
@@ -88,6 +109,10 @@ class AppRepository (application: Application){
 
     fun setCalorieGoal(goal: Int){
         userRef.child(curUID).child("calorie_goal").setValue(goal)
+    }
+
+    fun setStreak(streak: Int) {
+        userRef.child(curUID).child("streak").setValue(streak)
     }
 
     fun setLastLogin(date: String){

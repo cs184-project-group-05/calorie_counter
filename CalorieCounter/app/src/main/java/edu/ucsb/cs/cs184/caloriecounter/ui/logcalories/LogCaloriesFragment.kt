@@ -30,11 +30,27 @@ class LogCaloriesFragment : Fragment() {
 
         // - - - - - - - - - - Calorie Goal Text - - - - - - - - - -
         val calGoalValue = logCaloriesViewModel.calGoal.value.toString()
-        binding.textCalGoal.text = "${getString(R.string.calGoal1)} $calGoalValue ${getString(R.string.calGoal2)}"
+        var calGoal1 = getString(R.string.calGoal1_under)
+        if (logCaloriesViewModel.goalLoseWeight.value == 0)  // if lose weight == false
+            calGoal1 = getString(R.string.calGoal1_over)
+        binding.textCalGoal.text = "$calGoal1 $calGoalValue ${getString(R.string.calGoal2)}"
 
-        // - - - - - - - - - - Daily Total Text - - - - - - - - - -
+        // - - - - - - - - Make UI changes according to Calorie Count  - - - - - - - - -
         logCaloriesViewModel.calCount.observe(viewLifecycleOwner) {
-            binding.textDailyCal.text = "${getString(R.string.dailyTotal1)} $it ${getString(R.string.dailyTotal2)}"
+            // daily calorie count total text
+            binding.numCalDaily.text = "$it"
+
+            // indicate in UI when calorie goal is met
+            var goalMet = logCaloriesViewModel.calGoal.value!! >= it!!
+            if (logCaloriesViewModel.goalLoseWeight.value == 0) goalMet = !goalMet
+            if (goalMet) {
+                binding.numCalDaily.setTextColor(resources.getColor(R.color.green))
+            } else {
+                binding.numCalDaily.setTextColor(resources.getColor(R.color.red))
+            }
+            if (it == 0) {
+                binding.numCalDaily.setTextColor(resources.getColor(androidx.appcompat.R.color.material_grey_600))
+            }
         }
 
         // - - - - - - - - - - Draw Meal Inputs from Saved State - - - - - - - - - -
@@ -44,8 +60,8 @@ class LogCaloriesFragment : Fragment() {
         }
         logCaloriesViewModel.calorieArray.value?.forEachIndexed { index, calorieValue ->
             if (calorieValue != -1) {
-                if (index == 0) addFirstMealInput(logCaloriesViewModel)
-                else addNewMealInput(logCaloriesViewModel, index)
+                if (index == 0) addFirstMealInput(logCaloriesViewModel, calorieValue)
+                else addNewMealInput(logCaloriesViewModel, index, calorieValue)
             }
         }
 
@@ -55,31 +71,35 @@ class LogCaloriesFragment : Fragment() {
             if (logCaloriesViewModel.numMealInputs.value!! < 5) {
                 logCaloriesViewModel.addMealInputViewModel()
                 val newIndex = logCaloriesViewModel.numMealInputsCreated.value!! - 1
-                addNewMealInput(logCaloriesViewModel, newIndex)
+                addNewMealInput(logCaloriesViewModel, newIndex, 0)
                 if (logCaloriesViewModel.numMealInputs.value!! == 5)
                     binding.button.visibility = View.GONE
+            } else {
+                binding.button.visibility = View.GONE
             }
         }
         return root
     }
 
     // - - - - - - - - - - Helper Functions - - - - - - - - - -
-    private fun addFirstMealInput(logCaloriesViewModel: LogCaloriesViewModel) {
+    private fun addFirstMealInput(logCaloriesViewModel: LogCaloriesViewModel, calorieValue: Int) {
         // generates first meal input element (without delete button), adds to layout
         val mealInputsContainer = binding.linearLayout
         val newInputView: View = layoutInflater.inflate(R.layout.meal_input_1, null)
         val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
         newInput.id = 0
+        if (calorieValue != 0) newInput.setText(calorieValue.toString())
         newInput.doAfterTextChanged { handleChangeText(newInput, logCaloriesViewModel, 0) }
         mealInputsContainer.addView(newInputView)
     }
-    private fun addNewMealInput(logCaloriesViewModel: LogCaloriesViewModel, index: Int) {
+    private fun addNewMealInput(logCaloriesViewModel: LogCaloriesViewModel, index: Int, calorieValue: Int) {
         // generates new meal input element, adds it to layout
         val mealInputsContainer = binding.linearLayout
         val newInputView: View = layoutInflater.inflate(R.layout.meal_input, null)
         val newInput: TextInputEditText = newInputView.findViewById(R.id.mealInput)
         val deleteButton: Button = newInputView.findViewById(R.id.deleteButton)
         newInput.id = index
+        if (calorieValue != 0) newInput.setText(calorieValue.toString())
         newInput.doAfterTextChanged { handleChangeText(newInput, logCaloriesViewModel, index) }
         deleteButton.setOnClickListener {  // delete button
             if (index!=0) {
@@ -99,6 +119,12 @@ class LogCaloriesFragment : Fragment() {
             amount = Integer.parseInt(strAmount)
         logCaloriesViewModel.setCalorieI(index, amount)
         logCaloriesViewModel.calculateTotal()
+    }
+    private fun logValues(logCaloriesViewModel: LogCaloriesViewModel) {
+        Log.d("savedValues numMealInput", logCaloriesViewModel.numMealInputs.value.toString())
+        Log.d("savedValues numMealInputCreated", logCaloriesViewModel.numMealInputsCreated.value.toString())
+        Log.d("savedValues calCount", logCaloriesViewModel.calCount.value.toString())
+        Log.d("savedValues calorieArray", logCaloriesViewModel.calorieArray.value.toString())
     }
     override fun onDestroyView() {
         super.onDestroyView()
