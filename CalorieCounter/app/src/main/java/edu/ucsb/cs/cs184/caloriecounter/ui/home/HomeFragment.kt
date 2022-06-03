@@ -9,8 +9,14 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import edu.ucsb.cs.cs184.caloriecounter.R
+import edu.ucsb.cs.cs184.caloriecounter.SignIn
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
 
 
@@ -114,6 +120,13 @@ class HomeFragment : Fragment() {
 
             // update the title text
             title.text = homeViewModel.getWelcomeMessage()
+        }
+
+        // Sign out of app and restart the activity
+        val button = binding.button3
+        button.setOnClickListener {
+            Firebase.auth.signOut()
+            getActivity()?.recreate();
         }
 
         return root
