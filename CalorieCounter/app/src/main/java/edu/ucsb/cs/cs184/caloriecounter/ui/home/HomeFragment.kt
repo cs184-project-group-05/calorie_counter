@@ -44,8 +44,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.getCurUserMutableLiveData().observe(viewLifecycleOwner, Observer {
             homeViewModel.updateModel(it)
-            //TODO: reimplement the updateUI function.
-            //updateUI()
+            updateUI()
         })
         // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
         homeViewModel.updateDate()
@@ -53,42 +52,15 @@ class HomeFragment : Fragment() {
 
         // - - - - - - - - - - home page title text - - - - - - - - - -
         val title: TextView = binding.textHome
-        title.text = homeViewModel.getWelcomeMessage()
-
-        // - - - - - - - - - - name text input field - - - - - - - - - -
         val nameInputView = binding.textInputLayout8
-        nameInputView.editText?.setText(homeViewModel.name.value)
-
-        // - - - - - - - - - - age text input field - - - - - - - - - -
         val ageInputView = binding.ageInput
-        ageInputView.editText?.setText(homeViewModel.age.value)
-
-        // - - - - - - - - - - weight text input field - - - - - - - - - -
         val weightInputView = binding.weightInput
-        weightInputView.editText?.setText(homeViewModel.weight.value)
-
-        // - - - - - - - - - - height text input field - - - - - - - - - -
         val heightInputView = binding.heightInput
-        heightInputView.editText?.setText(homeViewModel.height.value)
-
-        // - - - - - - - - - - gender selection dropdown menu input field - - - - - - - - - -
         val genderDropdown = binding.genderDropdown
-        genderDropdown.editText?.setText(homeViewModel.gender.value)
         val genders = arrayOf("Male", "Female")
-        (genderDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(genders)
-
-        // - - - - - - - - - - goal selection dropdown menu input field - - - - - - - - - -
         val goalDropdown = binding.goalDropdown
         val goals = arrayOf("Lose Weight", "Gain Weight")
-        if (homeViewModel.goalLoseWeight.value == 1)
-            goalDropdown.editText?.setText(goals[0])
-        else
-            goalDropdown.editText?.setText(goals[1])
-        (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
-
-        // - - - - - - - - - - streak view - - - - - - - - - -
         val streakView: TextView = binding.streakText
-        streakView.text = homeViewModel.getStreakText()
 
         // - - - - - - - - - - fab - - - - - - - - - -
         val fab = binding.extendedFab
@@ -138,6 +110,47 @@ class HomeFragment : Fragment() {
         }
 
         return root
+    }
+
+    private fun updateUI(){
+        // - - - - - - - - - - home page title text - - - - - - - - - -
+        val title: TextView = binding.textHome
+        title.text = homeViewModel.getWelcomeMessage()
+
+        // - - - - - - - - - - name text input field - - - - - - - - - -
+        val nameInputView = binding.textInputLayout8
+        nameInputView.editText?.setText(homeViewModel.name.value)
+
+        // - - - - - - - - - - age text input field - - - - - - - - - -
+        val ageInputView = binding.ageInput
+        ageInputView.editText?.setText(homeViewModel.age.value)
+
+        // - - - - - - - - - - weight text input field - - - - - - - - - -
+        val weightInputView = binding.weightInput
+        weightInputView.editText?.setText(homeViewModel.weight.value)
+
+        // - - - - - - - - - - height text input field - - - - - - - - - -
+        val heightInputView = binding.heightInput
+        heightInputView.editText?.setText(homeViewModel.height.value)
+
+        // - - - - - - - - - - gender selection dropdown menu input field - - - - - - - - - -
+        val genderDropdown = binding.genderDropdown
+        genderDropdown.editText?.setText(homeViewModel.gender.value)
+        val genders = arrayOf("Male", "Female")
+        (genderDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(genders)
+
+        // - - - - - - - - - - goal selection dropdown menu input field - - - - - - - - - -
+        val goalDropdown = binding.goalDropdown
+        val goals = arrayOf("Lose Weight", "Gain Weight")
+        if (homeViewModel.goalLoseWeight.value == 1)
+            goalDropdown.editText?.setText(goals[0])
+        else
+            goalDropdown.editText?.setText(goals[1])
+        (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
+
+        // - - - - - - - - - - streak view - - - - - - - - - -
+        val streakView: TextView = binding.streakText
+        streakView.text = homeViewModel.getStreakText()
     }
 
     override fun onDestroyView() {

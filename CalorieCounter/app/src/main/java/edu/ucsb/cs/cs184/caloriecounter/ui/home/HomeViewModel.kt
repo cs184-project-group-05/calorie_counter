@@ -36,9 +36,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     private val _gender = MutableLiveData<String>()
     val gender: MutableLiveData<String> = _gender
 
-    private val _goalLoseWeight = MutableLiveData<Int>().apply {
-        value = prefRepository.getGoalLoseWeight()
-    }
+    private val _goalLoseWeight = MutableLiveData<Int>()
     val goalLoseWeight: MutableLiveData<Int> = _goalLoseWeight
 
     private val _calCount = MutableLiveData<Int>()
@@ -52,6 +50,9 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     private val _lastLogin = MutableLiveData<String>()
     val lastLogin: MutableLiveData<String> = _lastLogin
+
+    private val _goalMet = MutableLiveData<Int>()
+    val goalMet : MutableLiveData<Int> = _goalMet
 
     // data locking boolean flags
     private val _canIncreaseStreak = MutableLiveData<Boolean>().apply { value = false }
@@ -144,24 +145,24 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun setGoalLoseWeight(goal: Int): Int {
-        prefRepository.setGoalLoseWeight(goal)
+        appRepository.setGoalLoseWeight(goal)
         this.goalLoseWeight.value = goal
         return goal
     }
 
     fun setCalGoal(calGoal: Int): Int{
-        prefRepository.setCalorieGoal(calGoal)
+        appRepository.setCalorieGoal(calGoal)
         return calGoal
     }
 
     fun setStreak(streak: Int): Int{
-        prefRepository.setStreak(streak)
+        appRepository.setStreak(streak)
         this.streak.value = streak
         return streak
     }
 
     fun setLastLogin(lastLogin: String): String{
-        prefRepository.setLastLogin(lastLogin)
+        appRepository.setLastLogin(lastLogin)
         this.lastLogin.value = lastLogin
         return lastLogin
     }
@@ -177,10 +178,13 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         gender.value = user.gender ?: ""
 
         goalLoseWeight.value = user.goal_lose_weight ?: 0
-        streak.value = user.streak ?: 0
-        lastLogin.value = user.last_login ?: ""
+        goalMet.value = user.goal_met ?: 0
+
         calCount.value = user.calorie_count ?: 0
         calGoal.value = user.calorie_goal ?: 0
+
+        streak.value = user.streak ?: 0
+        lastLogin.value = user.last_login ?: ""
     }
 
     //function that calculates target daily goal given user input.
@@ -218,7 +222,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             c.add(Calendar.DATE, -1)
 
             // if goal not met on previous day, set streak to 0
-            val goalMet = prefRepository.getGoalMet()
+            val goalMet = this.goalMet.value
             if (goalMet == 0) {
                 this.setStreak(0)
             }
@@ -231,11 +235,11 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             c.add(Calendar.DATE, 1) // reset calendar back to original position
 
             // reset calorie UI data
-            prefRepository.setCalorieCount(0)
-            prefRepository.setNumMealInputs(0)
-            prefRepository.setNumMealInputsCreated(0)
-            prefRepository.setCalorieArray(mutableListOf<Int>())
-            prefRepository.setGoalMet(0)  // set to 1 when goal is met
+            appRepository.setCalorieCount(0)
+            appRepository.setNumMealInputs(0)
+            appRepository.setNumMealInputsCreated(0)
+            appRepository.setCalorieArray(mutableListOf<Int>())
+            appRepository.setGoalMet(0)  // set to 1 when goal is met
         }
 
         this.setLastLogin(curDate) //change last login to the current date.
@@ -260,10 +264,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         if (_canSetNewGoalMet.value == false) return
         if (this.streak.value == null || this.streak.value!! < 0) this.setStreak(0)
 
-        var goalMet = this.calGoal.value!! >= this.calCount.value!!
-        if (this.goalLoseWeight.value!! == 0) goalMet = !goalMet
+        var goalMet = (this.calGoal.value ?: 0) >= (this.calCount.value ?: 0)
+        if (this.goalLoseWeight.value == 0) goalMet = !goalMet
 
-        if (goalMet && this.calCount.value!! >= 1) {
+        if (goalMet && (this.calCount.value ?: 0) >= 1) {
             // only allow for one streak increase per day
             if (_canIncreaseStreak.value == true) {
                 this.setStreak(this.streak.value!! + 1)

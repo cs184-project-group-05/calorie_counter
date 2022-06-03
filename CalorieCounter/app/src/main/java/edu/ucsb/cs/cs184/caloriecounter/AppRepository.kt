@@ -83,7 +83,7 @@ class AppRepository (application: Application){
     }
 
     // - - - - - - - - Calorie Related - - - - - - - - - - ->
-    fun setGoalLostWeight(goal: Int) {
+    fun setGoalLoseWeight(goal: Int) {
         userRef.child(curUID).child("goal_lose_weight").setValue(goal)
     }
 
