@@ -1,4 +1,4 @@
-package edu.ucsb.cs.cs184.caloriecounter.ui
+package edu.ucsb.cs.cs184.caloriecounter.ui.leaderboard
 
 import androidx.lifecycle.ViewModel
 
