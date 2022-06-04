@@ -19,5 +19,6 @@ data class User(
     var calorie_array: MutableList<Int>? = null,
     // - - - - - - - date related - - - - - - - >
     var streak: Int? = 0,
-    var last_login: String? = null
+    var last_login: String? = null,
+    val history: MutableList<String>? = null
 )

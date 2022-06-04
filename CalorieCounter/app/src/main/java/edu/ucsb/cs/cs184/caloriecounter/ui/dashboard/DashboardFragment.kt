@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import edu.ucsb.cs.cs184.caloriecounter.R
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentDashboardBinding
@@ -40,6 +41,20 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        dashboardViewModel.getCurUserMutableLiveData().observe(viewLifecycleOwner, Observer {
+            dashboardViewModel.updateModel(it)
+            updateUI(binding, dashboardViewModel)
+        })
+
+        return root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    fun updateUI(binding: FragmentDashboardBinding, dashboardViewModel: DashboardViewModel) {
         val calendarView = binding.calendarView
         val initialDate = dashboardViewModel.getInitialDate()
         val selectionMode = dashboardViewModel.getSelectionMode()
@@ -52,13 +67,6 @@ class DashboardFragment : Fragment() {
             showYearSelectionView = showYearSelectionView
         )
         calendarView.datesIndicators = this.getIndicators(dashboardViewModel.getIndicatorInformation())
-
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }
