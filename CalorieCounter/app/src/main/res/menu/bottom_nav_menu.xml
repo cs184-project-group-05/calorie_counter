@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_baseline_calendar_month_24"
         android:title="@string/title_calendar" />
 
+    <item
+        android:id="@+id/navigation_leaderboard"
+        android:icon="@drawable/ic_user_group"
+        android:title="@string/title_leaderboard" />
+
 </menu>

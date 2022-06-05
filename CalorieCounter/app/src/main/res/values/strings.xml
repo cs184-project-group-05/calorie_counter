@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_calendar">Calendar</string>
+    <string name="title_leaderboard">Leaderboard</string>
     <string name="pref">shared_prefs</string>
     <string name="calGoal1_under">Goal: under </string>
     <string name="calGoal1_over">Goal: over </string>

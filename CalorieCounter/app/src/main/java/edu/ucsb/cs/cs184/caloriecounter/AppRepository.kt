@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import edu.ucsb.cs.cs184.caloriecounter.data.User
+import edu.ucsb.cs.cs184.caloriecounter.data.UserStreak
 
 class AppRepository (application: Application){
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -20,12 +21,13 @@ class AppRepository (application: Application){
     private var curUserMutableLiveData : MutableLiveData<User> = MutableLiveData()
     private var curUID = firebaseAuth.currentUser?.uid ?: "" //Jank solution for circumventing null uid
     private lateinit var userData: User
+    private lateinit var userStreaks: ArrayList<UserStreak>
+    private var curStreaksMutableLiveData : MutableLiveData<ArrayList<UserStreak>> = MutableLiveData()
 
-    init{ //attach a listener upon creation so that it updates whenever data is updated.
+    init {  // attach a listener upon creation so that it updates whenever data is updated.
         val userListener = object : ValueEventListener {
-
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var results : HashMap<String, Any>? = dataSnapshot.value as? HashMap<String, Any>
+                val results : HashMap<String, Any>? = dataSnapshot.value as? HashMap<String, Any>
                 userData = User(
                     name = results?.get("name") as String?,
                     age = results?.get("age") as String?,
@@ -54,8 +56,25 @@ class AppRepository (application: Application){
                 Log.w(TAG, "loadUser:onCancelled", databaseError.toException())
             }
         }
+
+        val usersListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userStreaks = ArrayList()
+                for (ds in snapshot.children) {
+                    val name = ds.child("name").getValue<String>(String::class.java)
+                    val streak = ds.child("streak").getValue<Int>(Int::class.java)
+                    userStreaks.add(UserStreak(name?.trim(), streak))
+                }
+                curStreaksMutableLiveData.postValue(userStreaks)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("loadUserStreaks:onCancelled", error.toException())
+            }
+        }
         //attach listener that updates the current user's data
         userRef.child(curUID).addValueEventListener(userListener)
+        userRef.addValueEventListener(usersListener)
     }
 
     // - - - - - - - - - - - Helper Functions - - - - - - - - - - - - >
@@ -131,6 +150,10 @@ class AppRepository (application: Application){
 
     fun getCurUserMutableLiveData() : MutableLiveData<User>{
         return curUserMutableLiveData
+    }
+
+    fun getCurStreaksMutableLiveData() : MutableLiveData<ArrayList<UserStreak>>{
+        return curStreaksMutableLiveData
     }
 
     fun getName() : String?{

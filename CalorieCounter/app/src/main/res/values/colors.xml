@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00FF00</color>
     <color name="red">#FF0000</color>
+    <color name="gray">#D9D9D9</color>
+    <color name="salmon">#D15876</color>
 </resources>

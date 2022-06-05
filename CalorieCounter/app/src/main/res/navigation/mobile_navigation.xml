@@ -27,4 +27,9 @@
         android:name="edu.ucsb.cs.cs184.caloriecounter.ui.logcalories.LogCaloriesFragment"
         android:label="Log Calories"
         tools:layout="@layout/log_calories_fragment" />
+    <fragment
+        android:id="@+id/navigation_leaderboard"
+        android:name="edu.ucsb.cs.cs184.caloriecounter.ui.leaderboard.Leaderboard"
+        android:label="@string/title_leaderboard"
+        tools:layout="@layout/fragment_leaderboard" />
 </navigation>
