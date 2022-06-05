@@ -24,11 +24,10 @@ class AppRepository (application: Application){
     private var userStreaks: ArrayList<UserStreak> = ArrayList<UserStreak>()
     private var curStreaksMutableLiveData : MutableLiveData<ArrayList<UserStreak>> = MutableLiveData()
 
-    init{ //attach a listener upon creation so that it updates whenever data is updated.
+    init {  // attach a listener upon creation so that it updates whenever data is updated.
         val userListener = object : ValueEventListener {
-
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var results : HashMap<String, Any>? = dataSnapshot.value as? HashMap<String, Any>
+                val results : HashMap<String, Any>? = dataSnapshot.value as? HashMap<String, Any>
                 userData = User(
                     name = results?.get("name") as String?,
                     age = results?.get("age") as String?,
@@ -58,10 +57,7 @@ class AppRepository (application: Application){
 
         val usersListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                updateLeaderboard(snapshot)
-            }
-            private fun updateLeaderboard(snapshot: DataSnapshot) {
-                for (ds in snapshot.getChildren()) {
+                for (ds in snapshot.children) {
                     val name = ds.child("name").getValue<String>(String::class.java)
                     val streak = ds.child("streak").getValue<Int>(Int::class.java)
                     userStreaks.add(UserStreak(name?.trim(), streak))
@@ -154,7 +150,6 @@ class AppRepository (application: Application){
     }
 
     fun getCurStreaksMutableLiveData() : MutableLiveData<ArrayList<UserStreak>>{
-        Log.d("App repo streaks", curStreaksMutableLiveData.value.toString())
         return curStreaksMutableLiveData
     }
 

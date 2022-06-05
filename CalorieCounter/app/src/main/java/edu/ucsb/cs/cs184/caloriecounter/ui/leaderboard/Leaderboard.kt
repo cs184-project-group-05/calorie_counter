@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentLeaderboardBinding
-import edu.ucsb.cs.cs184.caloriecounter.ui.logcalories.LogCaloriesViewModel
 
 class Leaderboard : Fragment() {
     private var _binding: FragmentLeaderboardBinding? = null
@@ -17,34 +16,31 @@ class Leaderboard : Fragment() {
     private lateinit var viewModel: LeaderboardViewModel
     private var data = ArrayList<StreakItemViewModel>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         _binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[LeaderboardViewModel::class.java]
         val root: View = binding.root
-        val recylerView = binding.recyclerview
-        recylerView.layoutManager = LinearLayoutManager(context)
-        viewModel.updateStreaks()
-        viewModel.getCurStreaksMutableLiveData().observe(viewLifecycleOwner){
-            data = ArrayList<StreakItemViewModel>()
+        val recyclerView = binding.recyclerview
+        recyclerView.layoutManager = LinearLayoutManager(context)
 
-            viewModel.getCurStreaksMutableLiveData().value?.forEachIndexed { index, userStreak ->
-                data.add(StreakItemViewModel(userStreak.name.toString(), userStreak.streak.toString()))
+        // update leaderboard data & display
+        viewModel.getCurStreaksMutableLiveData().observe(viewLifecycleOwner) {
+            data = ArrayList<StreakItemViewModel>()
+            Log.d("leaderboard", viewModel.getCurStreaksMutableLiveData().value.toString())
+            viewModel.getCurStreaksMutableLiveData().value?.forEachIndexed { _, userStreak ->
+                data.add(
+                    StreakItemViewModel(
+                        userStreak.name.toString(),
+                        userStreak.streak.toString()
+                    )
+                )
             }
-            var sortedData = data.sortedByDescending { item -> item.streak.toInt() }
+            val sortedData = data.sortedByDescending { item -> item.streak.toInt() }
             val adapter = StreakItemAdapter(sortedData)
-            recylerView.adapter = adapter
+            recyclerView.adapter = adapter
         }
 
         return root
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LeaderboardViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 }
