@@ -2,18 +2,15 @@ package edu.ucsb.cs.cs184.caloriecounter
 
 import android.app.Application
 import android.content.ContentValues.TAG
-import android.service.autofill.UserData
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.lang.ref.Reference
 import edu.ucsb.cs.cs184.caloriecounter.data.User
 
 class AppRepository (application: Application){
@@ -47,7 +44,9 @@ class AppRepository (application: Application){
                     calorie_array = listLongToInt(results?.get("calorie_array") as MutableList<Long>?),
 
                     streak = (results?.get("streak") as Long?)?.toInt() ?: 0,
-                    last_login = results?.get("last_login") as String?
+                    last_login = results?.get("last_login") as String?,
+
+                    history = (results?.get("history") as MutableList<String>?)
                 )
                 curUserMutableLiveData.postValue(userData)
             }
@@ -136,6 +135,12 @@ class AppRepository (application: Application){
 
     fun getName() : String?{
         return curUserMutableLiveData.value?.name
+    }
+
+    // - - - - - - - - Calendar - - - - - - - -
+
+    fun setHistory(array: MutableList<String>?) {
+        userRef.child(curUID).child("history").setValue(array)
     }
 
 }

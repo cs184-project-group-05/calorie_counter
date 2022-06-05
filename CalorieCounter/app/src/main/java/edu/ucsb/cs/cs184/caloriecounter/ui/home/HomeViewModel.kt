@@ -54,6 +54,9 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     private val _goalMet = MutableLiveData<Int>()
     val goalMet : MutableLiveData<Int> = _goalMet
 
+    private val _history = MutableLiveData<MutableList<String>>()
+    val history : MutableLiveData<MutableList<String>> = _history
+
     // data locking boolean flags
     private val _canIncreaseStreak = MutableLiveData<Boolean>().apply { value = false }
     private val _canDecreaseStreak = MutableLiveData<Boolean>().apply { value = false }
@@ -167,6 +170,19 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return lastLogin
     }
 
+    fun setHistory(lastLogin: String, metGoal: Int) {
+        val entry = "$lastLogin:$metGoal" // each item has the format "dd-mm-yyyy:{0/1}", eg. 01-06-2022:1 means met goal on June 1st 2022
+        var newHistory = curUserMutableLiveData.value!!.history
+        if (newHistory == null) {
+            newHistory = mutableListOf(entry)
+        }
+        else {
+            newHistory!!.add(entry)
+        }
+        this.history.value = newHistory
+        appRepository.setHistory(newHistory)
+    }
+
     // - - - - - - - - - - public functions - - - - - - - - - -
 
     //updates all data in the ViewModel once data has loaded.
@@ -225,6 +241,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
             val goalMet = this.goalMet.value
             if (goalMet == 0) {
                 this.setStreak(0)
+            }
+            // add entry to calendar
+            if (goalMet != null) {
+                this.setHistory(sdf.format(c.time), goalMet)
             }
 
             // unlock data changes
