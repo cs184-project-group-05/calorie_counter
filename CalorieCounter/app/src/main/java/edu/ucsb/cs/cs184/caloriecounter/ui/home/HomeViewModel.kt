@@ -127,6 +127,10 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
     fun setGoalLoseWeight(goal: Int): Int {
         appRepository.setGoalLoseWeight(goal)
+        if (goalLoseWeight.value != goal) {  // reset streak if change goal
+            streak.value = 0
+            appRepository.setStreak(0)
+        }
         this.goalLoseWeight.value = goal
         return goal
     }
