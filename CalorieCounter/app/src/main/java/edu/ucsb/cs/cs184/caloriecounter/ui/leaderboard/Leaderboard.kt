@@ -14,30 +14,18 @@ class Leaderboard : Fragment() {
     private var _binding: FragmentLeaderboardBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: LeaderboardViewModel
-    private var data = ArrayList<StreakItemViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         _binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[LeaderboardViewModel::class.java]
         val root: View = binding.root
+
+        // display leaderboard live data
         val recyclerView = binding.recyclerview
         recyclerView.layoutManager = LinearLayoutManager(context)
-
-        // update leaderboard data & display
         viewModel.getCurStreaksMutableLiveData().observe(viewLifecycleOwner) {
-            data = ArrayList<StreakItemViewModel>()
-            Log.d("leaderboard", viewModel.getCurStreaksMutableLiveData().value.toString())
-            viewModel.getCurStreaksMutableLiveData().value?.forEachIndexed { _, userStreak ->
-                data.add(
-                    StreakItemViewModel(
-                        userStreak.name.toString(),
-                        userStreak.streak.toString()
-                    )
-                )
-            }
-            val sortedData = data.sortedByDescending { item -> item.streak.toInt() }
-            val adapter = StreakItemAdapter(sortedData)
+            val adapter = StreakItemAdapter(viewModel.getSortedData())
             recyclerView.adapter = adapter
         }
 

@@ -21,7 +21,7 @@ class AppRepository (application: Application){
     private var curUserMutableLiveData : MutableLiveData<User> = MutableLiveData()
     private var curUID = firebaseAuth.currentUser?.uid ?: "" //Jank solution for circumventing null uid
     private lateinit var userData: User
-    private var userStreaks: ArrayList<UserStreak> = ArrayList<UserStreak>()
+    private lateinit var userStreaks: ArrayList<UserStreak>
     private var curStreaksMutableLiveData : MutableLiveData<ArrayList<UserStreak>> = MutableLiveData()
 
     init {  // attach a listener upon creation so that it updates whenever data is updated.
@@ -57,6 +57,7 @@ class AppRepository (application: Application){
 
         val usersListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                userStreaks = ArrayList()
                 for (ds in snapshot.children) {
                     val name = ds.child("name").getValue<String>(String::class.java)
                     val streak = ds.child("streak").getValue<Int>(Int::class.java)

@@ -15,8 +15,18 @@ class LeaderboardViewModel (application: Application) : AndroidViewModel(applica
     fun getCurStreaksMutableLiveData(): MutableLiveData<ArrayList<UserStreak>> {
         return curStreaksMutableLiveData
     }
-    fun updateLeaderboard() {
-        curStreaksMutableLiveData = appRepository.getCurStreaksMutableLiveData()
-//        Log.d("leaderboard", curStreaksMutableLiveData.value.toString())
+    fun getSortedData(): List<StreakItemViewModel> {
+        val data = ArrayList<StreakItemViewModel>()
+        curStreaksMutableLiveData.value?.forEachIndexed { _, userStreak ->
+            if (userStreak.name != null) {
+                data.add(
+                    StreakItemViewModel(
+                        userStreak.name.toString(),
+                        userStreak.streak.toString()
+                    )
+                )
+            }
+        }
+        return data.sortedByDescending { item -> item.streak.toInt() }
     }
 }
