@@ -30,7 +30,7 @@ class StreakItemAdapter(private val itemList: List<StreakItemViewModel>) : Recyc
         val StreakItemViewModel = itemList[position]
         val spannable = SpannableString(StreakItemViewModel.streak + " day streak!")
         spannable.setSpan(ForegroundColorSpan(Color.rgb(209,88,118)), 0,StreakItemViewModel.streak.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE )
-        holder.nameView.text = StreakItemViewModel.name + " just shared:"
+        holder.nameView.text = StreakItemViewModel.name + " achieved:"
         holder.streakView.text = spannable
 
     }
