@@ -53,10 +53,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return "Hello, " + this.name.value
     }
 
-    fun getStreakText(): String {
-        return "Streak: " + this.streak.value + " days"
-    }
-
     fun getSnackbarText(
         validInputAge: String?,
         validInputWeight: String?,

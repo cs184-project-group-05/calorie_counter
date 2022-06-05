@@ -146,8 +146,11 @@ class HomeFragment : Fragment() {
         (goalDropdown.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(goals)
 
         // - - - - - - - - - - streak view - - - - - - - - - -
-        val streakView: TextView = binding.streakText
-        streakView.text = homeViewModel.getStreakText()
+        homeViewModel.streak.observe(viewLifecycleOwner) {
+            val streakView: TextView = binding.streakText
+            streakView.text = "Streak: $it days"
+        }
+
     }
 
     override fun onDestroyView() {

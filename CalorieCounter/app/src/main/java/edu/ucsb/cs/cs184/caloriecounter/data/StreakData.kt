@@ -29,11 +29,11 @@ class StreakData(application: Application): AndroidViewModel(application) {
     // fetches login data and updates date & goalMet, if streak reset returns true
     @SuppressLint("SimpleDateFormat")
     fun updateDate(user: User):Boolean {
-        Log.d("newStreak", "here")
         val lastLogin = user.last_login?: ""
         val sdf = SimpleDateFormat("dd-MM-yyyy")
         val c : Calendar = Calendar.getInstance()
         val curDate = sdf.format(c.time)
+        var returnVal = false
 
         if (lastLogin != curDate) {
             c.add(Calendar.DATE, -1)
@@ -42,7 +42,7 @@ class StreakData(application: Application): AndroidViewModel(application) {
             val goalMet = user.goal_met
             if (goalMet == 0) {
                 appRepository.setStreak(0)
-                return true
+                returnVal = true
             }
 
             // add entry to calendar
@@ -63,7 +63,7 @@ class StreakData(application: Application): AndroidViewModel(application) {
             appRepository.setGoalMet(0)  // set to 1 when goal is met
         }
         appRepository.setLastLogin(curDate) // change last login to the current date.
-        return false
+        return returnVal
     }
 
     // fetches calorie data and updates streak, returns value
