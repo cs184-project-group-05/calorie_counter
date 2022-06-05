@@ -18,37 +18,32 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import edu.ucsb.cs.cs184.caloriecounter.R
 import edu.ucsb.cs.cs184.caloriecounter.SignIn
+import edu.ucsb.cs.cs184.caloriecounter.data.StreakData
 import edu.ucsb.cs.cs184.caloriecounter.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
-
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private lateinit var homeViewModel : HomeViewModel
+    private lateinit var streakData: StreakData
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // - - - - - - - - - - Check if User exists in database - - - - - - - - - - -
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-
+        streakData = ViewModelProvider(this)[StreakData::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         var isFirstUpdate = true
 
+        // - - - - - - - - - - Check if User exists in database - - - - - - - - - - -
         homeViewModel.getCurUserMutableLiveData().observe(viewLifecycleOwner, Observer {
             homeViewModel.updateModel(it)
-            if (isFirstUpdate){
-                // - - - - - - - - - - Update Streak and other values when new day is detected - - - - - - - - - -
-                homeViewModel.updateDate()
-                homeViewModel.updateStreak()
+            if (isFirstUpdate) {
+                // update streak and date
+                val streakReset:Boolean = streakData.updateDate(it)
+                val newStreak = streakData.updateStreak(it, streakReset)
+                homeViewModel.updateStreakDisplayed(newStreak)
                 isFirstUpdate = false
             }
             updateUI()
@@ -61,10 +56,7 @@ class HomeFragment : Fragment() {
         val weightInputView = binding.weightInput
         val heightInputView = binding.heightInput
         val genderDropdown = binding.genderDropdown
-        val genders = arrayOf("Male", "Female")
         val goalDropdown = binding.goalDropdown
-        val goals = arrayOf("Lose Weight", "Gain Weight")
-        val streakView: TextView = binding.streakText
 
         // - - - - - - - - - - fab - - - - - - - - - -
         val fab = binding.extendedFab
@@ -85,6 +77,7 @@ class HomeFragment : Fragment() {
             homeViewModel.setGender(genderDropdown.editText?.text.toString())
 
             // set goal
+            val goals = arrayOf("Lose Weight", "Gain Weight")
             if (goalDropdown.editText?.text.toString() == goals[0])  // goals[0] == "lose weight"
                 homeViewModel.setGoalLoseWeight(1)  // lose weight == true
             else
