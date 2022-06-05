@@ -1,9 +1,11 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.home
 
 import android.app.Application
+import android.util.Log
+import edu.ucsb.cs.cs184.caloriecounter.data.User
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import edu.ucsb.cs.cs184.caloriecounter.AppRepository
 import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 import java.text.SimpleDateFormat
 import java.util.*
@@ -13,52 +15,57 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     // - - - - - - - - - - member variables - - - - - - - - - -
 
     // by lazy = one time initialization: we only want one local database to be created ever
-    private val prefRepository by lazy { PrefRepository(application) }
 
-    private val _name = MutableLiveData<String>().apply {
-        value = prefRepository.getName()
-    }
+    private val prefRepository = PrefRepository(application)
+    private val appRepository = AppRepository(application)
+    private var curUserMutableLiveData : MutableLiveData<User> = appRepository.getCurUserMutableLiveData()
+
+
+    private val _name = MutableLiveData<String>()
     val name: MutableLiveData<String> = _name
 
-    private val _age = MutableLiveData<String>().apply {
-        value = prefRepository.getAge()
-    }
+    private val _age = MutableLiveData<String>()
     val age: MutableLiveData<String> = _age
 
-    private val _weight = MutableLiveData<String>().apply {
-        value = prefRepository.getWeight()
-    }
+    private val _weight = MutableLiveData<String>()
     val weight: MutableLiveData<String> = _weight
 
-    private val _height = MutableLiveData<String>().apply {
-        value = prefRepository.getHeight()
-    }
+    private val _height = MutableLiveData<String>()
     val height: MutableLiveData<String> = _height
 
-    private val _gender = MutableLiveData<String>().apply {
-        value = prefRepository.getGender()
-    }
+    private val _gender = MutableLiveData<String>()
     val gender: MutableLiveData<String> = _gender
 
-    private val _goal = MutableLiveData<String>().apply {
-        value = prefRepository.getGoal()
-    }
-    val goal: MutableLiveData<String> = _goal
+    private val _goalLoseWeight = MutableLiveData<Int>()
+    val goalLoseWeight: MutableLiveData<Int> = _goalLoseWeight
 
-    private val _streak = MutableLiveData<Int>().apply {
-        value = prefRepository.getStreak()
-    }
+    private val _calCount = MutableLiveData<Int>()
+    val calCount: MutableLiveData<Int> = _calCount
+
+    private val _calGoal = MutableLiveData<Int>()
+    val calGoal: MutableLiveData<Int> = _calGoal
+
+    private val _streak = MutableLiveData<Int>()
     val streak: MutableLiveData<Int> = _streak
 
-    private val _lastLogin = MutableLiveData<String>().apply{
-        value = prefRepository.getLastLogin()
-    }
+    private val _lastLogin = MutableLiveData<String>()
     val lastLogin: MutableLiveData<String> = _lastLogin
+
+    private val _goalMet = MutableLiveData<Int>()
+    val goalMet : MutableLiveData<Int> = _goalMet
+
+    private val _history = MutableLiveData<MutableList<String>>()
+    val history : MutableLiveData<MutableList<String>> = _history
+
+    // data locking boolean flags
+    private val _canIncreaseStreak = MutableLiveData<Boolean>().apply { value = false }
+    private val _canDecreaseStreak = MutableLiveData<Boolean>().apply { value = false }
+    private val _canSetNewGoalMet = MutableLiveData<Boolean>().apply { value = false }
 
     // - - - - - - - - - - getters - - - - - - - - - -
 
     fun getWelcomeMessage(): String {
-        if (this.name.value == null) {
+        if (this.name.value == null || this.name.value == "") {
             return "Welcome! Please enter your information to get started."
         }
         return "Hello, " + this.name.value
@@ -84,10 +91,13 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun getCurUserMutableLiveData() : MutableLiveData<User>{
+        return curUserMutableLiveData
+    }
     // - - - - - - - - - - setters - - - - - - - - - -
 
     fun setName(name: String): String {
-        prefRepository.setName(name)
+        appRepository.setName(name)
         this.name.value = name
         return name
     }
@@ -96,7 +106,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // returns null if the age is invalid, otherwise return the input
         // calls to setAge should check for null return value and handle appropriately
         if (this.isWholeNumber(age)) {
-            prefRepository.setAge(age)
+            appRepository.setAge(age)
             this.age.value = age
             return age
         }
@@ -109,7 +119,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // returns null if the weight is invalid, otherwise return the weight
         // calls to setWeight should check for null return value and handle appropriately
         if (this.isNumber(weight)) {
-            prefRepository.setWeight(weight)
+            appRepository.setWeight(weight)
             this.weight.value = weight
             return weight
         }
@@ -122,7 +132,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         // returns null if the height is invalid, otherwise return the height
         // calls to setHeight should check for null return value and handle appropriately
         if (this.isNumber(height)) {
-            prefRepository.setHeight(height)
+            appRepository.setHeight(height)
             this.height.value = height
             return height
         }
@@ -132,35 +142,66 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun setGender(gender: String): String {
-        prefRepository.setGender(gender)
+        appRepository.setGender(gender)
         this.gender.value = gender
         return gender
     }
 
-    fun setGoal(goal: String): String {
-        prefRepository.setGoal(goal)
-        this.goal.value = goal
+    fun setGoalLoseWeight(goal: Int): Int {
+        appRepository.setGoalLoseWeight(goal)
+        this.goalLoseWeight.value = goal
         return goal
     }
 
     fun setCalGoal(calGoal: Int): Int{
-        prefRepository.setCalorieGoal(calGoal)
+        appRepository.setCalorieGoal(calGoal)
         return calGoal
     }
 
     fun setStreak(streak: Int): Int{
-        prefRepository.setStreak(streak)
+        appRepository.setStreak(streak)
         this.streak.value = streak
         return streak
     }
 
     fun setLastLogin(lastLogin: String): String{
-        prefRepository.setLastLogin(lastLogin)
+        appRepository.setLastLogin(lastLogin)
         this.lastLogin.value = lastLogin
         return lastLogin
     }
 
+    fun setHistory(lastLogin: String, metGoal: Int) {
+        val entry = "$lastLogin:$metGoal" // each item has the format "dd-mm-yyyy:{0/1}", eg. 01-06-2022:1 means met goal on June 1st 2022
+        var newHistory = curUserMutableLiveData.value!!.history
+        if (newHistory == null) {
+            newHistory = mutableListOf(entry)
+        }
+        else {
+            newHistory!!.add(entry)
+        }
+        this.history.value = newHistory
+        appRepository.setHistory(newHistory)
+    }
+
     // - - - - - - - - - - public functions - - - - - - - - - -
+
+    //updates all data in the ViewModel once data has loaded.
+    fun updateModel(user: User){
+        name.value = user.name ?: ""
+        age.value = user.age ?: ""
+        weight.value = user.weight ?: ""
+        height.value = user.height ?: ""
+        gender.value = user.gender ?: ""
+
+        goalLoseWeight.value = user.goal_lose_weight ?: 0
+        goalMet.value = user.goal_met ?: 0
+
+        calCount.value = user.calorie_count ?: 0
+        calGoal.value = user.calorie_goal ?: 0
+
+        streak.value = user.streak ?: 0
+        lastLogin.value = user.last_login ?: ""
+    }
 
     //function that calculates target daily goal given user input.
     fun calcGoal() : Int{
@@ -195,11 +236,30 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 
         if (lastLogin != curDate){
             c.add(Calendar.DATE, -1)
-            updateStreak(lastLogin, sdf.format(c.time))
-            c.add(Calendar.DATE, 1) //reset calendar back to original position
 
-            //TODO:reset daily total calories and reset meal array.
-            prefRepository.setCalorieCount(0)
+            // if goal not met on previous day, set streak to 0
+            val goalMet = this.goalMet.value
+            if (goalMet == 0) {
+                this.setStreak(0)
+            }
+            // add entry to calendar
+            if (goalMet != null) {
+                this.setHistory(sdf.format(c.time), goalMet)
+            }
+
+            // unlock data changes
+            _canDecreaseStreak.value = false
+            _canIncreaseStreak.value = true
+            _canSetNewGoalMet.value = true
+
+            c.add(Calendar.DATE, 1) // reset calendar back to original position
+
+            // reset calorie UI data
+            appRepository.setCalorieCount(0)
+            appRepository.setNumMealInputs(0)
+            appRepository.setNumMealInputsCreated(0)
+            appRepository.setCalorieArray(mutableListOf<Int>())
+            appRepository.setGoalMet(0)  // set to 1 when goal is met
         }
 
         this.setLastLogin(curDate) //change last login to the current date.
@@ -219,19 +279,31 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
         return s.all {char -> char.isDigit() || char == '.'}
     }
 
-    //function that updates the streak of the user.
-    private fun updateStreak(lastLogin: String, prevDate: String){
-        if(this.streak.value == null || this.streak.value!! <= 0){
-            this.setStreak(1)
-            return
-        }
+    // function that updates the streak of the user.
+    fun updateStreak() {
+        if (_canSetNewGoalMet.value == false) return
+        if (this.streak.value == null || this.streak.value!! < 0) this.setStreak(0)
 
-        if(lastLogin == prevDate && prefRepository.getCalorieGoal() >= prefRepository.getCalorieCount()){
-            //only achieved when calorie count is under calorie goal
-            this.setStreak(this.streak.value!! + 1)
-        }else{
-            this.setStreak(1)
+        var goalMet = (this.calGoal.value ?: 0) >= (this.calCount.value ?: 0)
+        if (this.goalLoseWeight.value == 0) goalMet = !goalMet
+
+        if (goalMet && (this.calCount.value ?: 0) >= 1) {
+            // only allow for one streak increase per day
+            if (_canIncreaseStreak.value == true) {
+                this.setStreak(this.streak.value!! + 1)
+                _canIncreaseStreak.value = false
+                _canDecreaseStreak.value = true  // can decrease, since already increased
+            }
+            appRepository.setGoalMet(1)
         }
-        return
+        else {
+            // only allow for one streak decrease after a streak increase
+            if (_canDecreaseStreak.value == true) {
+                this.setStreak(this.streak.value!! - 1)
+                _canDecreaseStreak.value = false
+                _canIncreaseStreak.value = true
+            }
+            appRepository.setGoalMet(0)
+        }
     }
 }

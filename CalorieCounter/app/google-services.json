@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "52207512946",
+    "project_id": "cs185-calorie",
+    "storage_bucket": "cs185-calorie.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52207512946:android:794519d4d047e9ac6141eb",
+        "android_client_info": {
+          "package_name": "edu.ucsb.cs.cs184.caloriecounter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52207512946-lhne26kr42scgdmjih4a88lrpcpse8rl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ucsb.cs.cs184.caloriecounter",
+            "certificate_hash": "a3fc649e91096cd4023ebdb1894a947b74018402"
+          }
+        },
+        {
+          "client_id": "52207512946-97puvlagm27p0f99vgddk6aems6gkgg9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABV7KiR1c4L4s-JhyiDM5JMeGYQWG3VT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52207512946-97puvlagm27p0f99vgddk6aems6gkgg9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
