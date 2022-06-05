@@ -1,7 +1,20 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.leaderboard
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import edu.ucsb.cs.cs184.caloriecounter.AppRepository
+import edu.ucsb.cs.cs184.caloriecounter.data.UserStreak
 
-class LeaderboardViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class LeaderboardViewModel (application: Application) : AndroidViewModel(application){
+    private val appRepository = AppRepository(application)
+    private var curStreaksMutableLiveData : MutableLiveData<ArrayList<UserStreak>> = appRepository.getCurStreaksMutableLiveData()
+
+    fun getCurStreaksMutableLiveData() : MutableLiveData<ArrayList<UserStreak>>{
+        return curStreaksMutableLiveData
+    }
+
+    fun updateStreaks(){
+        curStreaksMutableLiveData = appRepository.getCurStreaksMutableLiveData()
+    }
 }
