@@ -28,7 +28,7 @@
         android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:backgroundTint="#D15876"
+        android:backgroundTint="@color/salmon"
         android:text="x"
         android:textColor="#fff" />
 
