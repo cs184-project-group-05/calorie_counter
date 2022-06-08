@@ -11,6 +11,12 @@ This app is generally aimed at people who are looking to get started with workin
 #### Problem to Solve
 This app aims to retain the motivation that people have towards working out and eating healthy. People typically get motivated to start something, but they slowly lose the motivation to continue the process consistently on a daily basis. We hope that by gamifying and tying in social media aspects, people will be incentivised to consistently achieve their health and fitness goals. In addition, our application aims to solve the difficulty and hassle that people trying to stick to strict diets face. Our application will make the process of tracking daily caloric intake easier and more insightful, which will help users stick to their health goals.
 
+#### Repository Structure
+TODO
+
+#### Implementation Details
+TODO
+
 #### Links
 [Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
 [Project Documentation](https://docs.google.com/document/d/1C3jKW0eY5vk2FBU2KxfJt62THZBQ9Zhku9-dq8PkYh4/edit) \
