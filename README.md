@@ -20,8 +20,8 @@ This app aims to retain the motivation that people have towards working out and 
 [Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
 [Project Documentation](https://docs.google.com/document/d/1C3jKW0eY5vk2FBU2KxfJt62THZBQ9Zhku9-dq8PkYh4/edit) \
 [Project Board](https://github.com/cs184-project-group-05/calorie_counter/projects/2) \
-[Figma Design](https://www.figma.com/file/lXWhOFhHbkRhhZmBhvAHbZ/MVP-Design?node-id=0%3A1)
-[Project Idea/Brainstorm](https://docs.google.com/document/d/16ygNktoWMI5ws5bw9VOr405scNEsafuZl3CZEMSH3sw/edit) \
+[Figma Design](https://www.figma.com/file/lXWhOFhHbkRhhZmBhvAHbZ/MVP-Design?node-id=0%3A1) \
+[Project Idea/Brainstorm](https://docs.google.com/document/d/16ygNktoWMI5ws5bw9VOr405scNEsafuZl3CZEMSH3sw/edit)
 
 #### Emails
 Aaron Huang: \
