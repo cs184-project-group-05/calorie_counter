@@ -4,11 +4,8 @@
 
 **Team Members**: Aaron Huang, Andy Ho, Cameron King, ChanChan Mao, Mathew Kramsch 
 
-**Idea**: Calorie counter application with gamification aspects and social media integration.
-
 #### Description
-This application will be a calorie counter app that is gamified. It will allow users to input their health information and their target health goals (body type/weight), and will get data from online sources or algorithms to propose a target daily calorie goal and keep track of the number of calories that the user has consumed for each day. 
-The app will also include game elements such as ‘streaks’ or ‘daily login rewards’ that will encourage users to open the app at least once everyday and remember to track their caloric intake for the day. Aside from the ‘streaks’ feature, we plan on incorporating other social media aspects, such as adding friends via the app, as an additional incentive for users to keep themselves and their friends accountable and to integrate the app in their daily lives.
+Calorie Diary is a mobile application that helps track your daily calorie consumption. It’s designed to help users consistently track their calorie intake through a fun, gamified interface. In addition, Calorie Diary offers social media functionality such as a leaderboard to celebrate your dietary achievements with other people. This app also uses Firebase authentication and database to keep your data secure and accessible from different devices. 
 
 #### Audience
 This app is generally aimed at people who are looking to get started with working out and eating healthier or maintaining a healthy lifestyle. Since our application will allow for users to set a health goal of either gaining weight or losing weight, our target demographic includes both overweight and underweight users, as well as people who would just like to maintain a healthy diet and lifestyle.
@@ -20,10 +17,11 @@ This app aims to retain the motivation that people have towards working out and 
 
 ## Information
 #### Links
-[Project Board](https://github.com/cs184-project-group-05/calorie_counter/projects/2) \
+[Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
 [Project Documentation](https://docs.google.com/document/d/1C3jKW0eY5vk2FBU2KxfJt62THZBQ9Zhku9-dq8PkYh4/edit) \
-[Project Idea/Brainstorm](https://docs.google.com/document/d/16ygNktoWMI5ws5bw9VOr405scNEsafuZl3CZEMSH3sw/edit) \
+[Project Board](https://github.com/cs184-project-group-05/calorie_counter/projects/2) \
 [Figma Design](https://www.figma.com/file/lXWhOFhHbkRhhZmBhvAHbZ/MVP-Design?node-id=0%3A1)
+[Project Idea/Brainstorm](https://docs.google.com/document/d/16ygNktoWMI5ws5bw9VOr405scNEsafuZl3CZEMSH3sw/edit) \
 
 #### Emails
 Aaron Huang: \
