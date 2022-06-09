@@ -14,10 +14,10 @@ This app aims to retain the motivation that people have towards living a healthy
 #### Repository Structure
 Java > edu.ucsb.cs.cs184.caloriecounter: Contains the kotlin code for the project 
 - UI folder: Contains Controller classes and ViewModel classes for each of the fragments in the app. This follows the ViewModel Structure by performing model view controller separation and organization. 
-	-dashboard : Streak History Calendar
-	-home: Homepage/User Information Input 
-	-leaderboard: Leaderboard/Social Media Aspect
-	-logcalories: Calorie Tracking
+	- dashboard : Streak History Calendar
+	- home: Homepage/User Information Input 
+	- leaderboard: Leaderboard/Social Media Aspect
+	- logcalories: Calorie Tracking
 - Data: Data abstraction 
 	- StreakData: Class for updating streaks 
 	- User: Data class for storing all of a user's data
@@ -25,7 +25,7 @@ Java > edu.ucsb.cs.cs184.caloriecounter: Contains the kotlin code for the projec
 - AppRepository class: Acts as an intermediary between the ViewModels and the Firebase Realtime Database. 
 
 Res: Contains xml code for the UI and stored values referenced throughout the project. 
--drawable: Contains all icons used in the project. 
+- drawable: Contains all icons used in the project. 
 - layout: Contains all xml for fragments and views. 
 - menu: xml for bottom navigation bar
 - navigation: xml for navigating between fragments. 
