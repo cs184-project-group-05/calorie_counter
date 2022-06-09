@@ -29,11 +29,11 @@ This app aims to retain the motivation that people have towards living a healthy
 - `AppRepository` class: acts as an intermediary between the ViewModels and the Firebase Realtime Database.
 
 - `CalorieCounter/app/src/main/res` folder: contains xml files for the UI and stored values referenced throughout the project. 
-	- `drawable`: contains all icons used in the project
 	- `layout`: contains all xml for fragments and reusable view components
 	- `menu`: xml for bottom navigation bar
 	- `navigation`: xml for navigating between fragments
 	- `values`: stored values for frequently referenced dimensions, strings, and colors
+	- `drawable`: contains all icons used in the project
 
 
 #### Implementation Details
