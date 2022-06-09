@@ -3,13 +3,13 @@
 **Team Members**: Aaron Huang, Andy Ho, Cameron King, ChanChan Mao, Mathew Kramsch 
 
 #### Description
-Calorie Diary is a mobile application that helps track your daily calorie consumption. It’s designed to help users consistently track their calorie intake through a fun, gamified interface. In addition, Calorie Diary offers social media functionality such as a leaderboard to celebrate your dietary achievements with other people. This app also uses Firebase authentication and database to keep your data secure and accessible from different devices. 
+Calorie Diary is a mobile application that helps track your daily calorie consumption. It’s designed to help users consistently track their calorie intake through a fun, gamified interface. In addition, Calorie Diary offers a leaderboard social media functionality to celebrate your dietary achievements with other people.
 
 #### Audience
-This app is generally aimed at people who are looking to get started with working out and eating healthier or maintaining a healthy lifestyle. Since our application will allow for users to set a health goal of either gaining weight or losing weight, our target demographic includes both overweight and underweight users, as well as people who would just like to maintain a healthy diet and lifestyle.
+This app targets the general demographic of people who are looking to maintain a healthier lifestyle. Since our application allows for users to set a goal of either gaining weight or losing weight, our target demographic includes both overweight and underweight users, as well as people who would just like to maintain a healthy diet and lifestyle.
 
 #### Problem to Solve
-This app aims to retain the motivation that people have towards working out and eating healthy. People typically get motivated to start something, but they slowly lose the motivation to continue the process consistently on a daily basis. We hope that by gamifying and tying in social media aspects, people will be incentivised to consistently achieve their health and fitness goals. In addition, our application aims to solve the difficulty and hassle that people trying to stick to strict diets face. Our application will make the process of tracking daily caloric intake easier and more insightful, which will help users stick to their health goals.
+This app aims to retain the motivation that people have towards living a healthy lifestyle. People typically get motivated to start something, but often struggle with sticking to their goals consistently and building long-term healthy habits. By turning something as mundane as eating healthy into a game, and building a community of individuals striving for their health goals through the social media aspect of our application, people will be incentivised to consistently achieve their health and fitness goals. Our application also aims to solve the difficulty and hassle that people trying to stick to strict diets face. By making the process of tracking daily caloric intake easier and more insightful, our application helps users make measurable progress towards their health goals.
 
 #### Repository Structure
 TODO
@@ -19,7 +19,7 @@ TODO
 - viewModel structure (for model-view-controller seperation and organization)
 
 #### Implementation Details
-We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store their user data and use the application on multiple devices.
+We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store and access their user data on multiple devices securely and with ease.
 
 #### Links
 [Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
