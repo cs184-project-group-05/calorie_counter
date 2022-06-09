@@ -13,9 +13,13 @@ This app aims to retain the motivation that people have towards working out and 
 
 #### Repository Structure
 TODO
+- UI folder
+- AppRepository class
+- data abstractions (streakData class and User class)
+- viewModel structure (for model-view-controller seperation and organization)
 
 #### Implementation Details
-TODO
+We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store their user data and use the application on multiple devices.
 
 #### Links
 [Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
