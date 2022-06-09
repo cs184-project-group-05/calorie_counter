@@ -12,7 +12,7 @@ This app targets the general demographic of people who are looking to maintain a
 This app aims to retain the motivation that people have towards living a healthy lifestyle. People typically get motivated to start something, but often struggle with sticking to their goals consistently and building long-term healthy habits. By turning something as mundane as eating healthy into a game, and building a community of individuals striving for their health goals through the social media aspect of our application, people will be incentivised to consistently achieve their health and fitness goals. Our application also aims to solve the difficulty and hassle that people trying to stick to strict diets face. By making the process of tracking daily caloric intake easier and more insightful, our application helps users make measurable progress towards their health goals.
 
 #### Repository Structure
-- `java/edu.ucsb.cs.cs184.caloriecounter` folder: contains the kotlin code for the project.
+- `CalorieCounter/app/src/main/java/edu.ucsb.cs.cs184.caloriecounter` folder: contains the kotlin code for the project.
 
 - `ui` folder: contains Controller ViewModel classes for each fragment in the app. 
 	- follows the ViewModel Structure by performing model view controller separation and organization.
@@ -25,16 +25,16 @@ This app aims to retain the motivation that people have towards living a healthy
 	- `StreakData`: class to store streak data for users
 	- `User`: class to store all of a user's data in one place
 	- `UserStreak`: class used in leaderboard fragment to link user name and streak
-	- 
 
-- `res` folder: contains xml files for the UI and stored values referenced throughout the project. 
+- `AppRepository` class: acts as an intermediary between the ViewModels and the Firebase Realtime Database.
+
+- `CalorieCounter/app/src/main/res` folder: contains xml files for the UI and stored values referenced throughout the project. 
 	- `drawable`: contains all icons used in the project
 	- `layout`: contains all xml for fragments and views used in Lists and RecyclerViews
 	- `menu`: xml for bottom navigation bar
 	- `navigation`: xml for navigating between fragments
 	- `values`: stored values for frequently referenced dimensions, strings, and colors
 
-- `AppRepository` class: acts as an intermediary between the ViewModels and the Firebase Realtime Database.
 
 #### Implementation Details
 We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store and access their user data on multiple devices securely and with ease. See project documentation for additional implementation details and decisions. 
