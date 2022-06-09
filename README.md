@@ -29,7 +29,7 @@ We used kotlin and xml to develop this application, and utilized a Firebase remo
 [Project Idea/Brainstorm](https://docs.google.com/document/d/16ygNktoWMI5ws5bw9VOr405scNEsafuZl3CZEMSH3sw/edit)
 
 #### Emails
-Aaron Huang: \
+Aaron Huang: aaronhuang@ucsb.edu \
 Andy Ho: andyho@ucsb.edu \
 Cameron King: csking@ucsb.edu \
 ChanChan Mao: chanchanmao@ucsb.edu \
