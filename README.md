@@ -30,7 +30,7 @@ This app aims to retain the motivation that people have towards living a healthy
 
 - `CalorieCounter/app/src/main/res` folder: contains xml files for the UI and stored values referenced throughout the project. 
 	- `drawable`: contains all icons used in the project
-	- `layout`: contains all xml for fragments and views used in Lists and RecyclerViews
+	- `layout`: contains all xml for fragments and reusable view components
 	- `menu`: xml for bottom navigation bar
 	- `navigation`: xml for navigating between fragments
 	- `values`: stored values for frequently referenced dimensions, strings, and colors
