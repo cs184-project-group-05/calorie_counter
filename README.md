@@ -29,9 +29,10 @@ Res: Contains xml code for the UI and stored values referenced throughout the pr
 - layout: Contains all xml for fragments and views. 
 - menu: xml for bottom navigation bar
 - navigation: xml for navigating between fragments. 
+- values: stored values for frequently referenced dimensions, strings, and colors
 
 #### Implementation Details
-We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store and access their user data on multiple devices securely and with ease.
+We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store and access their user data on multiple devices securely and with ease. See project documentation for additional implementation details and decisions. 
 
 #### Links
 [Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
