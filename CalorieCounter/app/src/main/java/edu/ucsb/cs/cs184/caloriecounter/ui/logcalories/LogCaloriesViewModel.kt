@@ -1,12 +1,10 @@
 package edu.ucsb.cs.cs184.caloriecounter.ui.logcalories
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import edu.ucsb.cs.cs184.caloriecounter.AppRepository
-import edu.ucsb.cs.cs184.caloriecounter.PrefRepository
 import edu.ucsb.cs.cs184.caloriecounter.data.User
 
 class LogCaloriesViewModel(application: Application) : AndroidViewModel(application) {
