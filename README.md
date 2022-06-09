@@ -40,7 +40,7 @@ This app aims to retain the motivation that people have towards living a healthy
 We used kotlin and xml to develop this application, and utilized a Firebase remote database for our backend to store user data including calorie goals, streaks, and other details. We additionally used Firebases Google Authentication to allow users to login with their existing Google accounts to store and access their user data on multiple devices securely and with ease. See project documentation for additional implementation details and decisions. 
 
 #### Links
-[Product Manual](https://docs.google.com/document/d/12e9VtqA195yRl4WJHmGE9InMMcmSgRwnq0iMYBpRaMc/edit) \
+[Product Manual](https://github.com/cs184-project-group-05/calorie_counter/blob/main/User%20Manual.pdf) \
 [Project Documentation](https://docs.google.com/document/d/1C3jKW0eY5vk2FBU2KxfJt62THZBQ9Zhku9-dq8PkYh4/edit) \
 [Project Board](https://github.com/cs184-project-group-05/calorie_counter/projects/2) \
 [Figma Design](https://www.figma.com/file/lXWhOFhHbkRhhZmBhvAHbZ/MVP-Design?node-id=0%3A1) \
