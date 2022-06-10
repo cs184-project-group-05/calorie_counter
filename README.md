@@ -1,5 +1,7 @@
 # Calorie Counter Android Application
 
+**NOTE TO TAs:** Because the application isn't published to the play store, Google requires a sha-1 key to be generated using Gradle's signingReport and then uploaded onto Firebase for the Google Authentication to work. If you are unable to get past the Sign-In page this may be the culprit, in which case please email us and we can add your sha-1 key to Firebase.
+
 **Team Members**: Aaron Huang, Andy Ho, Cameron King, ChanChan Mao, Mathew Kramsch 
 
 #### Description
